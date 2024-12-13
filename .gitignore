@@ -21,3 +21,8 @@ KiCad/**/*.dsn
 KiCad/**/*.ses
 KiCad/**/*.xml
 KiCad/**/*.csv
+
+# Additional per-project KiCad ignores
+KiCad/CodyCartridge/CodyCartridge-backups
+KiCad/CodyComputer/CodyComputer-backups
+KiCad/CodyKeyboard/CodyKeyboard-backups
