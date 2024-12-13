@@ -1,0 +1,23 @@
+# Ignore Mac OS files
+.DS_Store
+
+# Ignore temporary/unrelated KiCad files (adapted from Github's gitignore)
+KiCad/**/*.000
+KiCad/**/*.bak
+KiCad/**/*.bck
+KiCad/**/*.kicad_pcb-bak
+KiCad/**/*.kicad_sch-bak
+KiCad/**/*-backups
+KiCad/**/*.kicad_prl
+KiCad/**/*.sch-bak
+KiCad/**/*~
+KiCad/**/_autosave-*
+KiCad/**/*.tmp
+KiCad/**/*-save.pro
+KiCad/**/*-save.kicad_pcb
+KiCad/**/fp-info-cache
+KiCad/**/*.net
+KiCad/**/*.dsn
+KiCad/**/*.ses
+KiCad/**/*.xml
+KiCad/**/*.csv
