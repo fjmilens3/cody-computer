@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="15mm"
+   height="15mm"
+   viewBox="0 0 15 15"
+   version="1.1"
+   id="svg1788"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1785" />
+  <g
+     id="layer1">
+    <g
+       aria-label="-"
+       id="text3436"
+       style="font-weight:900;font-size:9.17222px;line-height:11.3251px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.264583">
+      <path
+         d="M 9.4490179,3.1643673 H 12.053928 V 4.6135781 H 9.4490179 Z"
+         id="path304" />
+    </g>
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281"
+       cx="0.5025"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-5"
+       cx="14.4975"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-0"
+       cx="14.4975"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-9"
+       cx="0.5025"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <g
+       aria-label="D"
+       id="text3356"
+       style="font-weight:900;font-size:9.87778px;line-height:12.1963px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.264583">
+      <path
+         d="m 6.7394108,7.2189653 q 1.1754558,0 2.0940894,0.4346223 0.9186335,0.4346223 1.4322778,1.2050892 0.523523,0.7704668 0.523523,1.7483672 0,0.9779 -0.523523,1.758245 Q 9.7521337,13.135755 8.8335002,13.570378 7.9148666,14.005 6.7394108,14.005 H 4.2106991 V 7.2189653 Z m 0.316089,5.0475457 q 0.5037667,0 0.8988779,-0.207434 0.404989,-0.217311 0.632178,-0.592666 0.2271889,-0.385234 0.2271889,-0.859367 0,-0.474134 -0.2271889,-0.8494893 Q 8.3593667,9.3821991 7.9543777,9.1747657 7.5592665,8.9574546 7.0554998,8.9574546 H 6.1269884 v 3.3090564 z"
+         id="path307" />
+    </g>
+  </g>
+</svg>

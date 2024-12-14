@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="15mm"
+   height="15mm"
+   viewBox="0 0 15 15"
+   version="1.1"
+   id="svg1788"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1785" />
+  <g
+     id="layer1">
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281"
+       cx="0.5025"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-5"
+       cx="14.4975"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-0"
+       cx="14.4975"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-9"
+       cx="0.5025"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <g
+       aria-label="L"
+       id="text3356"
+       style="font-weight:900;font-size:9.87778px;line-height:12.1963px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.264583">
+      <path
+         d="M 6.8776996,12.296144 H 10.038589 V 14.005 H 4.9614103 V 7.2189653 h 1.9162893 z"
+         id="path1590" />
+    </g>
+    <g
+       aria-label="]"
+       id="text3436"
+       style="font-weight:900;font-size:5.70927px;line-height:7.04934px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.214097">
+      <path
+         d="M 9.7958434,5.6217356 H 10.640815 V 2.1562087 H 9.7958434 V 1.465387 H 11.480078 V 6.3125573 H 9.7958434 Z"
+         id="path1587" />
+    </g>
+  </g>
+</svg>

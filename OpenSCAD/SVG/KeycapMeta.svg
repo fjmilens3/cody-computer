@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="15mm"
+   height="15mm"
+   viewBox="0 0 15 15"
+   version="1.1"
+   id="svg1788"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1785" />
+  <g
+     id="layer1">
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281"
+       cx="0.5025"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-5"
+       cx="14.4975"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-0"
+       cx="14.4975"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-9"
+       cx="0.5025"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:7.05556px;line-height:8.71163px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="4.2550001"
+       y="6.3125572"
+       id="text3432"><tspan
+         id="tspan3430"
+         style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:7.05556px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';stroke-width:0.264583"
+         x="4.2550001"
+         y="6.3125572" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:7.05556px;line-height:8.71163px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       x="10.75147"
+       y="6.3125572"
+       id="text3436"><tspan
+         id="tspan3434"
+         style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:7.05556px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';stroke-width:0.264583"
+         x="10.75147"
+         y="6.3125572" /></text>
+    <path
+       id="rect1966"
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0525053;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       d="M 3.9999554,3.9999554 V 11.000045 H 11.000045 V 3.9999554 Z M 5.0004111,5.0004111 H 10.000106 V 10.000106 H 5.0004111 Z" />
+  </g>
+</svg>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="15mm"
+   height="15mm"
+   viewBox="0 0 15 15"
+   version="1.1"
+   id="svg1788"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1785" />
+  <g
+     id="layer1">
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281"
+       cx="0.5025"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-5"
+       cx="14.4975"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-0"
+       cx="14.4975"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-9"
+       cx="0.5025"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <g
+       aria-label="S"
+       id="text3356"
+       style="font-weight:900;font-size:9.87778px;line-height:12.1963px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.264583">
+      <path
+         d="m 7.7123715,14.005 q -0.9285113,0 -1.7681226,-0.286455 -0.8396113,-0.296334 -1.4717892,-0.859367 l 1.0668002,-1.274234 q 1.0569225,0.829734 2.2422561,0.829734 0.3852334,0 0.5926668,-0.118534 0.2074333,-0.128411 0.2074333,-0.3556 0,-0.158044 -0.098778,-0.246944 -0.0889,-0.0889 -0.3062111,-0.148167 Q 7.959316,11.476289 7.4061603,11.347878 6.5369157,11.150322 5.9936378,10.933011 5.4503599,10.705822 5.1243932,10.300833 4.7984264,9.8859661 4.7984264,9.2142771 q 0,-0.6716891 0.3259668,-1.1754559 0.3358445,-0.5037667 0.9383891,-0.7803446 0.6124223,-0.2765778 1.4125225,-0.2765778 1.6989781,0 2.8448002,0.9186335 L 9.3619608,9.2537882 Q 8.8977051,8.9179437 8.3939383,8.7500214 q -0.5037668,-0.1778 -0.9680224,-0.1778 -0.3358445,0 -0.5136446,0.1284111 -0.1778,0.1185334 -0.1778,0.316089 0,0.1778 0.098778,0.2864556 0.098778,0.098778 0.3457223,0.1876778 0.2469445,0.079022 0.760589,0.1876778 0.8692447,0.1876778 1.4125226,0.4148663 0.5531557,0.227189 0.849489,0.622301 0.306211,0.395111 0.306211,1.017411 0,1.0668 -0.7605888,1.669345 Q 8.9964829,14.005 7.7123715,14.005 Z"
+         id="path1181" />
+    </g>
+    <g
+       aria-label="="
+       id="text3436"
+       style="font-weight:900;font-size:7.05556px;line-height:8.71163px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.264583">
+      <path
+         d="M 8.9911101,2.4813881 H 12.511835 V 3.5326665 H 8.9911101 Z m 0,1.651001 H 12.511835 V 5.1836676 H 8.9911101 Z"
+         id="path1184" />
+    </g>
+  </g>
+</svg>

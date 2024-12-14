@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="15mm"
+   height="15mm"
+   viewBox="0 0 15 15"
+   version="1.1"
+   id="svg1788"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1785" />
+  <g
+     id="layer1">
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281"
+       cx="0.5025"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-5"
+       cx="14.4975"
+       cy="0.50250006"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-0"
+       cx="14.4975"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <ellipse
+       style="fill:#ff0000;stroke-width:0.00840462;stroke-linecap:square;stroke-dasharray:none"
+       id="path3281-9"
+       cx="0.5025"
+       cy="14.497499"
+       rx="0.5025"
+       ry="0.50250006" />
+    <g
+       aria-label="H"
+       id="text3356"
+       style="font-weight:900;font-size:9.87778px;line-height:12.1963px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.264583"
+       transform="translate(-0.02962435)">
+      <path
+         d="M 8.7692858,7.2189653 H 10.685575 V 14.005 H 8.7692858 V 11.397266 H 6.2899631 V 14.005 H 4.3736737 V 7.2189653 h 1.9162894 v 2.469445 h 2.4793227 z"
+         id="path1307" />
+    </g>
+    <g
+       aria-label=";"
+       id="text3436"
+       style="font-weight:900;font-size:7.05556px;line-height:8.71163px;font-family:Metropolis;-inkscape-font-specification:'Metropolis Heavy';text-align:center;text-anchor:middle;stroke-width:0.264583">
+      <path
+         d="m 10.758528,3.0105552 q -0.352778,0 -0.592667,-0.2398891 -0.2398888,-0.2469446 -0.2398888,-0.592667 0,-0.3245558 0.2398888,-0.5573893 0.239889,-0.239889 0.592667,-0.239889 0.324556,0 0.55739,0.239889 0.239889,0.2398891 0.239889,0.5573893 0,0.3457224 -0.232834,0.592667 -0.232833,0.2398891 -0.564445,0.2398891 z m -0.536222,2.9633352 q 0.176389,-0.1411112 0.296333,-0.3175002 0.127,-0.176389 0.176389,-0.352778 -0.3175,0 -0.550333,-0.2328335 -0.2257784,-0.239889 -0.2257784,-0.5715003 0,-0.3386669 0.2328334,-0.578556 0.239889,-0.2469446 0.564445,-0.2469446 0.366889,0 0.599723,0.3033891 0.232833,0.3033891 0.232833,0.7831672 0,0.3880558 -0.232833,0.7972783 -0.232834,0.4092225 -0.649112,0.7549449 z"
+         id="path1304" />
+    </g>
+  </g>
+</svg>
