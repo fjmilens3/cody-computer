@@ -1,9 +1,26 @@
 /*
+ * Keycap.scad
  * OpenSCAD file defining the keycaps for the Cody Computer's mechanical keyboard.
+ *
+ * Copyright 2024 Frederick John Milens III, The Cody Computer Developers.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  * The Cody Computer has a total of 31 keys including a space bar. Each keycap has a Cherry
  * MX stem and legends on the top; the spacebar has two stems and no legends. Legends are
- & defined using SVG files and subtracted from the top surface of the keycap.
+ * defined using SVG files and subtracted from the top surface of the keycap.
  *
  * Keycaps should be 3D printed top-down on a glass bed. Once printed, the keycaps may be
  * lightly sanded to remove any printing artifacts and air-dry white clay used to fill in
