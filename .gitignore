@@ -26,3 +26,6 @@ KiCad/**/*.csv
 KiCad/CodyCartridge/CodyCartridge-backups
 KiCad/CodyComputer/CodyComputer-backups
 KiCad/CodyKeyboard/CodyKeyboard-backups
+
+# Propeller IDE binary output
+Spin/*.binary
