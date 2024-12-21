@@ -29,3 +29,6 @@ KiCad/CodyKeyboard/CodyKeyboard-backups
 
 # Propeller IDE binary output
 Spin/*.binary
+
+# 64tass binary output
+Tass/*.bin
