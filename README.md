@@ -14,12 +14,12 @@ Each subdirectory contains a portion of the design:
 - `Tass` contains the `64tass` assembly files for Cody BASIC and demo programs.
 - `CodyBASIC` contains some sample Cody BASIC programs used for demo purposes.
 
-All design files and sources are released under the GPL version 3. __The
-Cody Computer Book__ included with the sources is not but may be freely
-distributed. 
+All design files and sources are released under the GPL version 3. A mention
+of the Cody Computer in any derived works is also appreciated.
 
-Note that the book is still in draft form and updates will be made to
-the repository in the future.
+__The Cody Computer Book__ detailing the project is not released under the GPL
+but may be freely distributed. Visit 
+[www.codycomputer.org](https://www.codycomputer.org) for more information.
 
 If any technical issues or inaccuracies are found in any of the material,
 please reach out to the author or raise an issue on GitHub.
