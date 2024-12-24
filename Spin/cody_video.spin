@@ -4,8 +4,6 @@
 ' 
 ' Copyright 2024 Frederick John Milens III, The Cody Computer Developers.
 '
-' This file is part of the Cody Computer project.
-' 
 ' This program is free software; you can redistribute it and/or
 ' modify it under the terms of the GNU General Public License
 ' as published by the Free Software Foundation; either version 3
