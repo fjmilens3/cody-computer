@@ -8,13 +8,14 @@ Each subdirectory contains a portion of the design:
 
 - `KiCad` contains the design files for the Cody Computer's electronics.
 - `OpenSCAD` contains the design files for the Cody Computer's printable parts.
-- `STL` contains the generated STL files suitable for slicing and printing.
+- `PDF` contains generated PDFs of the KiCad schematics.
 - `Spin` contains the Propeller `.spin` files for the Propeller's firmware.
+- `STL` contains the generated STL files suitable for slicing and printing.
 - `Tass` contains the `64tass` assembly files for Cody BASIC and demo programs.
 - `CodyBASIC` contains some sample Cody BASIC programs used for demo purposes.
- 
-All design files and sources are released under the GPL version 3. The
-Cody Computer Book included with the sources is not but may be freely
+
+All design files and sources are released under the GPL version 3. __The
+Cody Computer Book__ included with the sources is not but may be freely
 distributed. 
 
 Note that the book is still in draft form and updates will be made to

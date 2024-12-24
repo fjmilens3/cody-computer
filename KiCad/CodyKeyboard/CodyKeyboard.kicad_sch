@@ -1147,7 +1147,7 @@
     (property "Reference" "J1" (id 0) (at 221.6912 98.4504 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Value" "" (id 1) (at 221.6912 100.7618 0)
+    (property "Value" "Keyboard Connector" (id 1) (at 221.6912 100.7618 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x11_P2.54mm_Horizontal" (id 2) (at 220.98 97.79 0)
