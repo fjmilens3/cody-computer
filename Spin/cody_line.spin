@@ -181,6 +181,10 @@ if_z            mov     buffer_ptr, buffer2_ptr
 ' line is fetched. Finally the character is blitted to the scanline buffer
 ' using the current colors. (Adjustments are made for soft-scrolling when
 ' scrolling is enabled.)
+' 
+' In bitmap mode the layout is slightly different. Data is read as in
+' character mode, but the screen memory is arranged as a sequence of 1000
+' multicolor "characters" instead. The actual character memory is unused.
 '
 render_chars            
                 ' Set up the output pointer taking into account the left "margin" for sprites
@@ -210,18 +214,22 @@ if_nz           mov     adjustv, scrollv
                 nop
                 
 :load_offset    mov     screen_memory_offset, 0_0
-
-                ' Calculate the locations in screen and color memory using the offset above
+                
+                ' Calculate the locations in color and screen memory using the offset above
+                mov     curr_colors_ptr, colmem_ptr
+                add     curr_colors_ptr, screen_memory_offset
+                
+                test    controlreg, #%00010000 wz
+if_z            mov     curr_screen_adv, #1
+if_nz           mov     curr_screen_adv, #8
+if_nz           shl     screen_memory_offset, #3
+                
                 mov     curr_screen_ptr, scrmem_ptr
                 add     curr_screen_ptr, screen_memory_offset
                 
-                mov     curr_colors_ptr, colmem_ptr
-                add     curr_colors_ptr, screen_memory_offset
-                                        
                 mov     chars_remaining, #40
                 
-:char_loop      
-                rdbyte  color_data, curr_colors_ptr
+:char_loop      rdbyte  color_data, curr_colors_ptr
                 
                 shl     color_data, #1
                 add     color_data, lookup_ptr
@@ -231,19 +239,18 @@ if_nz           mov     adjustv, scrollv
                 
                 add     curr_colors_ptr, #1
                 
-                rdbyte  source_ptr, curr_screen_ptr
-                shl     source_ptr, #3
-                add     source_ptr, chrset_ptr
+                test    controlreg, #%00010000              wz
+if_nz           mov     source_ptr, curr_screen_ptr
+if_z            rdbyte  source_ptr, curr_screen_ptr
+if_z            shl     source_ptr, #3
+if_z            add     source_ptr, chrset_ptr
                 add     source_ptr, char_offset_y
-                
-                rdbyte  pixel_data, source_ptr
-                
                 add     dest_ptr, #3
+                rdbyte  pixel_data, source_ptr
                 
                 mov     pixels_remaining, #4
                 
-:pixel_loop     
-                mov     temp, pixel_data
+:pixel_loop     mov     temp, pixel_data
                 and     temp, #%11
                 
                 shl     temp, #3
@@ -258,7 +265,7 @@ if_nz           mov     adjustv, scrollv
                 djnz    pixels_remaining, #:pixel_loop
                 
                 add     dest_ptr, #5
-                add     curr_screen_ptr, #1
+                add     curr_screen_ptr, curr_screen_adv
                 
                 djnz    chars_remaining, #:char_loop                        
                 
@@ -598,6 +605,7 @@ temp                    long    $0
 curr_chrset_ptr         long    0
 curr_screen_ptr         long    0
 curr_colors_ptr         long    0
+curr_screen_adv         long    0
 
 TOGGLE_EMPTY            long    $0
 TOGGLE_FRAME            long    $1
