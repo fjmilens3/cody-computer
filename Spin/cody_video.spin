@@ -67,7 +67,7 @@
 ' Bit 1 - If set, enables vertical scrolling (and reduces screen height by one row)
 ' Bit 2 - If set, enables horizontal scrolling (and reduces screen width by two cols)
 ' Bit 3 - If set, enables row effects.
-' Bit 4 - Unused.
+' Bit 4 - If set, enables bitmap mode.
 ' Bit 5 - Unused.
 ' Bit 6 - Unused.
 ' Bit 7 - Unused.
