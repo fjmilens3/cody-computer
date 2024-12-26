@@ -6547,7 +6547,10 @@ MAIN      SEI                 ; Shut off interrupts
           LDA #$40              ; Set up VIA timer 1 continuous interrupts, no outputs
           STA VIA_ACR
   
-          LDA #$C0              ; Set up VIA timer 1 interrupt
+          LDA #$7F              ; Disable all interrupt sources
+          STA VIA_IER
+
+          LDA #$C0              ; Enable VIA timer 1 interrupt
           STA VIA_IER
   
           LDA #$07              ; Set VIA data direction register A to 00000111 (pins 0-2 outputs, pins 3-7 inputs)
