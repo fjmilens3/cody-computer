@@ -7,8 +7,8 @@
   (paper "USLetter")
   (title_block
     (title "Cody Computer Motherboard")
-    (date "2023-04-19")
-    (rev "A")
+    (date "2025-01-06")
+    (rev "B")
   )
 
   (layers
@@ -4205,7 +4205,7 @@
   (gr_text "65C02 PROCESSOR" (at 128.49 81.31) (layer "F.SilkS") (tstamp 43b56870-e642-4cfc-b31f-d487415c13fe)
     (effects (font (size 1 1) (thickness 0.15)))
   )
-  (gr_text "CODY COMPUTER\nREV A\nCBM, FJM, ADB" (at 103.307637 141.346) (layer "F.SilkS") (tstamp 4734ce34-afb2-426d-a897-824ada61b68a)
+  (gr_text "CODY COMPUTER\nREV B\nCBM, FJM, ADB" (at 103.307637 141.346) (layer "F.SilkS") (tstamp 4734ce34-afb2-426d-a897-824ada61b68a)
     (effects (font (size 1.5 1.5) (thickness 0.3)) (justify left))
   )
   (gr_text "65C22 I/O" (at 177.99 74.81) (layer "F.SilkS") (tstamp 48153439-7515-4bb7-bc25-2be816d10f21)
