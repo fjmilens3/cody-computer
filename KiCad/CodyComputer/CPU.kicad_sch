@@ -6,8 +6,8 @@
 
   (title_block
     (title "65C02 Microprocessor and Static RAM")
-    (date "2023-04-18")
-    (rev "A")
+    (date "2025-01-06")
+    (rev "B")
   )
 
   (lib_symbols
@@ -1308,7 +1308,7 @@
     (uuid 00000000-0000-0000-0000-00006028bb66)
     (property "Reference" "U5" (id 0) (at 86.36 57.15 0))
     (property "Value" "W65C02SxP" (id 1) (at 86.36 59.69 0))
-    (property "Footprint" "Package_DIP:DIP-40_W15.24mm_Socket" (id 2) (at 78.74 45.72 0)
+    (property "Footprint" "Package_DIP:DIP-40_W15.24mm_Socket_LongPads" (id 2) (at 78.74 45.72 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "http://www.westerndesigncenter.com/wdc/documentation/w65c02s.pdf" (id 3) (at 78.74 48.26 0)
@@ -1428,7 +1428,7 @@
     (uuid 00000000-0000-0000-0000-00006068e659)
     (property "Reference" "U6" (id 0) (at 210.82 69.85 0))
     (property "Value" "AS6C1008" (id 1) (at 210.82 72.39 0))
-    (property "Footprint" "Package_DIP:DIP-32_W15.24mm_Socket" (id 2) (at 203.2 97.79 0)
+    (property "Footprint" "Package_DIP:DIP-32_W15.24mm_Socket_LongPads" (id 2) (at 203.2 97.79 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "http://www.futurlec.com/Datasheet/Memory/628128.pdf" (id 3) (at 203.2 97.79 0)
