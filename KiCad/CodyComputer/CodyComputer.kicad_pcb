@@ -7,7 +7,7 @@
   (paper "USLetter")
   (title_block
     (title "Cody Computer Motherboard")
-    (date "2025-01-06")
+    (date "2025-01-10")
     (rev "B")
   )
 
@@ -85,7 +85,7 @@
       (plotinvisibletext false)
       (sketchpadsonfab false)
       (subtractmaskfromsilk false)
-      (outputformat 5)
+      (outputformat 4)
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
