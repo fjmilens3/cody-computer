@@ -1,4 +1,8 @@
 ;
+; TODO: HACKED VERSION WITHOUT KEYBOARD SCANNING, LIMITED FUNCTIONALITY
+;       FOR DEBUGGING/EARLY BUILDS. DO NOT MERGE TO MASTER OR USE UNDER
+;       NORMAL CIRCUMSTANCES.
+;
 ; codybasic.asm
 ; BASIC ROM (and related code) for the Cody Computer
 ; 
@@ -1286,161 +1290,6 @@ _ADDCOL   CLC                 ; Prepare to add to color memory pointer
           STA CURCOLPTR+1
 
           RTS
-          
-;
-; KEYSCAN
-;
-; Performs a single scan of the keyboard rows (including joystick rows) and
-; updates the KEYROWX zero page variables. Called by the timer ISR.
-;
-; Uses:
-;
-;   KEYROWx       Updated with new value for each row
-;
-KEYSCAN   PHA                   ; Preserve registers
-          PHX
-          
-          STZ VIA_IORA          ; Start at the first row and first key of the keyboard
-          LDX #0
-
-_LOOP     LDA VIA_IORA          ; Get the keys for the current row from the VIA port
-          LSR A
-          LSR A
-          LSR A
-          STA KEYROW0,X
-
-          INC VIA_IORA          ; Move on to the next keyboard row
-          INX
-  
-          CPX #8                ; Do we have any rows remaining to scan?
-          BNE _LOOP
-          
-          PLX                   ; Restore registers
-          PLA
-  
-          RTS
-
-;
-; KEYDECODE
-;
-; Decodes the contents of the KEYROWX zero page variables into a scan code,
-; updating the KEYMODS and KEYCODE zero page variables. You should usually
-; call KEYSCAN before calling this to update the key row data first.
-;
-; Uses:
-;
-;   KEYROWx       Read to determine the current pressed keys
-;   KEYMODS       Updated with current key modifiers
-;   KEYCODE       Updated with current key code
-;
-KEYDECODE PHX                   ; Preserve registers
-          PHY
-
-          STZ KEYMODS           ; Reset scan codes and modifiers at start of new scan
-          STZ KEYCODE
-
-          LDX #0                ; Start at the first row and first key scan code
-          LDY #0
-
-_ROW      LDA KEYROW0,X         ; Load the current row's column bits from zero page
-          INX
-
-          PHX                   ; Preserve row index
-
-          LDX #5                ; Loop over current row's columns
-
-_COL      INY                   ; Increment the current key number at the start of each new key
-
-          LSR A                 ; Shift to get the next column bit
-
-          BCS _NEXT             ; If the current column wasn't pressed, just skip to the next column
-  
-          CPY #KEY_META         ; Is this the META special key?
-          BNE _CODY
-
-          PHA                   ; META key is pressed, update current key modifiers
-          LDA KEYMODS
-          ORA #$20
-          STA KEYMODS
-          PLA
-
-          BRA _NEXT             ; Continue on to the next column
-
-_CODY     CPY #KEY_CODY         ; Is this the CODY special key?
-          BNE _NORM
-
-          PHA                   ; CODY key is pressed, update current key modifiers
-          LDA KEYMODS
-          ORA #$40
-          STA KEYMODS
-          PLA
-
-          BRA _NEXT             ; Continue on to the next column
-
-_NORM     PHA                   ; Not a special key so just store it as the current scan code
-          TYA
-          STA KEYCODE
-          PLA
-
-_NEXT     DEX                   ; Move on to the next keyboard column
-          BNE _COL
-
-          PLX                   ; Restore current row index
-
-          CPX #6                ; Continue while we have more rows to process      
-          BNE _ROW
-
-          LDA KEYCODE           ; Update the current key scan code with the modifiers
-          ORA KEYMODS
-          STA KEYCODE
-
-          PLY                   ; Restore registers
-          PLX
-
-          RTS
-
-;
-; KEYTOCHR
-;
-; Converts a scan code from KEYSCAN into a CODSCII character code. The scan code value in the
-; accumulator will be replaced with the CODSCII character code that it represents.
-;
-; Uses:
-;
-;   A             Scan code as input, CODSCII character as output
-;
-KEYTOCHR  PHX
-          DEC A
-          TAX
-          LDA _LOOKUP,X
-          PLX
-          RTS
-
-_LOOKUP
-
-.BYTE 'Q', 'E', 'T', 'U', 'O'      ; Key scan code mappings without any modifiers
-.BYTE 'A', 'D', 'G', 'J', 'L'
-.BYTE $00, 'X', 'V', 'N', $00
-.BYTE 'Z', 'C', 'B', 'M', $0A
-.BYTE 'S', 'F', 'H', 'K', ' '
-.BYTE 'W', 'R', 'Y', 'I', 'P'
-.BYTE $00, $00
-
-.BYTE '!', '#', '%', '&', '('      ; Key scan code mappings with META modifier
-.BYTE '@', '-', ':', $27, ']'
-.BYTE $00, '<', ',', '?', $00
-.BYTE '\', '>', '.', '/', $08
-.BYTE '=', '+', ';', '[', ' '
-.BYTE '"', '$', '^', '*', ')'
-.BYTE $00, $00
-
-.BYTE '1', '3', '5', '7', '9'      ; Key scan code mappings with CODY modifier
-.BYTE 'A', 'D', 'G', 'J', 'L'
-.BYTE $00, 'X', 'V', 'N', $1B
-.BYTE 'Z', 'C', 'B', 'M', $18
-.BYTE 'S', 'F', 'H', 'K', ' '
-.BYTE '2', '4', '6', '8', '0'
-.BYTE $00, $00
 
 ;
 ; MUL16
@@ -2312,83 +2161,42 @@ _NOT      CLC                     ; Not a letter, clear carry and return
 READKBD   PHA                   ; Preserve registers
           PHX
           
+          ;
+          ; TODO: TEMPORARY HACK TO READ KEYBOARD INPUT FROM THE TERMINAL. ONLY FOR
+          ;       SPECIAL BUILDS FOR TESTING PURPOSES, DO NOT MERGE TO MASTER BRANCH.
+          ;
+          
+          LDA #$F               ; Redirect IO to UART 1 at 19200 baud
+          STA IOBAUD
+          
+          LDA #1
+          STA IOMODE
+          
+          JSR SERIALON           ; Read input from serial
+          JSR READSER
+          JSR SERIALOFF
+          
+          STZ IOBAUD            ; Redirect back to keyboard/screen
+          STZ IOMODE
+          
+          LDX IBUFLEN           ; Replace last character with newline (could be carriage return instead)
+          DEX
+          
+          LDA #$A
+          STA IBUF,X
+          
           LDX #0                ; Start at beginning of input buffer
-                    
-_NEXT     LDA JIFFIES
-
-_WAIT     JSR BLINK             ; Wait for jiffies to change to know we got a new keyboard scan
-          CMP JIFFIES
-          BEQ _WAIT
-
-          JSR KEYDECODE         ; Decode whatever key was pressed (if anything)
           
-          LDA KEYCODE           ; Debounce keys by making sure we read the same code twice in a row
-          CMP KEYDEBO
-          STA KEYDEBO
-          BNE _NEXT
-          
-          LDA KEYCODE           ; Suppress repeated key presses by comparing to last key read
-          CMP KEYLAST
-          STA KEYLAST
-          BEQ _NEXT
-  
-          CMP #$60              ; Check for CODY + META (shift lock) toggle
-          BEQ _TOG
-  
-          BIT #$1F              ; Suppress key codes when no keys (aside from modifiers) were pressed
-          BEQ _NEXT
-  
-          JSR KEYTOCHR          ; Convert key code to CODSCII code and preserve on stack
-          PHA
-  
-          LDA KEYLOCK           ; Check if the shift lock is set
-          BEQ _KEY
-  
-          PLA                   ; Convert CODSCII code to lowercase
-          JSR TOLOWER
-          PHA
-
-_KEY      PLA                   ; Restore keyboard CODSCII code from stack
-          
-          CMP #CHR_CAN          ; Skip cancel character
-          BEQ _NEXT
-  
-          CMP #CHR_BS           ; Check for backspace character
-          BEQ _DEL
-  
-          CPX #$FE              ; Check for space to store character
-          BEQ _NEXT
-  
-          STA IBUF,X            ; Put the character in the buffer
-          INX
-          
-          CMP #CHR_NL           ; Check for newline character (end of line)
+_NEXT     CPX IBUFLEN           ; Check for more chars in input buffer
           BEQ _DONE
           
-          JSR SCREENPUT         ; Echo to the screen
-
-          BRA _NEXT
-  
-_DEL      CPX #0                ; Check that we have something in the buffer to delete
-          BEQ _NEXT
+          LDA IBUF,X            ; Echo each character in the input buffer to the screen
+          JSR SCREENPUT
           
-          DEX                   ; Back up one position the buffer and remove the char from the screen
-          JSR SCREENDEL
-  
-          BRA _NEXT
-  
-_TOG      LDA KEYLOCK           ; Toggle shift lock
-          EOR #$01
-          STA KEYLOCK
-          
+          INX                   ; Next loop
           BRA _NEXT
           
-_DONE     STX IBUFLEN           ; Update input buffer length
-          
-          LDA #20               ; TODO: CLEAR BLINKING CURSOR (MAKE THIS BETTER, ALSO SEE ABOVE)
-          STA (CURSCRPTR)
-          
-          PLX                   ; Restore registers
+_DONE     PLX                   ; Restore registers
           PLA
           
           RTS
@@ -2517,7 +2325,7 @@ _SKIP     LDA IBUF,X          ; Check for leading space
           BRA _SKIP
 
 _LOOP     LDA IBUF,X          ; Load the next character
-  
+          
           CMP #CHR_NL         ; End of line?
           BEQ _END
   
@@ -6447,26 +6255,15 @@ SWAPNIBS  ASL  A
 TIMERISR  PHA               ; Preserve accumulator
           
           BIT VIA_T1CL      ; Read the 6522 to clear the interrupt
-                    
-          JSR KEYSCAN       ; Scan keyboard
+          
+          ;
+          ; TODO: KEYBOARD SCANNING REMOVED. SPECIAL BUILD FOR NO KEYBOARD.
+          ;
           
           INC JIFFIES       ; Increment jiffy count lower byte (after scanning!)
-          BNE _TEST
+          BNE _DONE
           
           INC JIFFIES+1     ; Increment jiffy count upper byte on overflow
-          
-_TEST     LDA RUNMODE       ; Only allow breaks if we're running a program
-          BEQ _DONE
-
-          LDA KEYROW2       ; Check for Cody key on row 2 (and ONLY the Cody key)
-          CMP #$1E
-          BNE _DONE
-
-          LDA KEYROW3       ; Check for arrow key on row 3 (and ONLY the arrow key)
-          CMP #$0F
-          BNE _DONE
-          
-          JMP RAISE_BRK     ; Break
           
 _DONE     PLA               ; Restore accumulator
                     
@@ -6591,12 +6388,12 @@ BASIC     TSX                   ; Preserve the stack register for unwinding on e
 REPL      STZ RUNMODE           ; Clear out RUNMODE
 
           STZ IOMODE            ; Direct all IO to screen and keyboard
-
+          
           JSR READKBD           ; Read a line of input and advance the screen
           JSR SCREENADV
-
+                    
           JSR TOKENIZE          ; Tokenize the input
-  
+          
           LDA TBUF              ; Line number to add or execute the line immediately?
           CMP #$FF
           BNE _EXEC
@@ -7083,7 +6880,7 @@ TOKTABLE_H
 ; String table 
 
 STR_GREET
-  .NULL $0A, "   **** CODY COMPUTER BASIC V1.0 ****", $0A
+  .NULL $0A, "CODY BASIC (KBD HACK 19-JAN-2025)", $0A
 STR_READY
   .NULL $0A, "READY.", $0A
 STR_ERROR
