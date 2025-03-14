@@ -1,4 +1,4 @@
-all: codybasic.bin codybros.bin codycart.bin codyprog.bin codysid.bin codybitmap.bin
+all: codybasic.bin codybros.bin codycart.bin codyprog.bin codysid.bin codybitmap.bin resident.bin
 
 %.bin: %.asm
 	64tass --mw65c02 --nostart -o $@ $<
