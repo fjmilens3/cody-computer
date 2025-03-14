@@ -6490,7 +6490,75 @@ ISRSTUB   JMP (ISRPTR)
 ;
 ; This routine affects too many variables to mention each. Refer to the source instead.
 ;
-MAIN      SEI                 ; Shut off interrupts
+MAIN      JSR INIT              ; Run initialization on startup
+          
+          JSR CARTCHECK         ; Check for cartridge plugged in
+          BEQ BASIC
+  
+          STZ IOMODE            ; Cartridge found, load and run binary instead of BASIC
+          STZ IOBAUD
+          JMP LOADBIN
+          
+BASIC     JSR INIT              ; Re-run BASIC initialization just to be safe
+
+          TSX                   ; Preserve the stack register for unwinding on error conditions
+          STX STACKREG
+
+          STZ OBUFLEN           ; Move to beginning of the output buffer
+  
+          LDA #MSG_GREET        ; Print the welcome message
+          JSR PUTMSG
+          JSR FLUSH
+  
+          LDA #MSG_READY        ; Print the ready message
+          JSR PUTMSG
+          JSR FLUSH
+  
+          CLI                   ; Enable interrupts and drop through to the REPL loop
+
+REPL      STZ RUNMODE           ; Clear out RUNMODE
+
+          STZ IOMODE            ; Direct all IO to screen and keyboard
+
+          JSR READKBD           ; Read a line of input and advance the screen
+          JSR SCREENADV
+
+          JSR TOKENIZE          ; Tokenize the input
+  
+          LDA TBUF              ; Line number to add or execute the line immediately?
+          CMP #$FF
+          BNE _EXEC
+
+          JSR ENTERLINE         ; Enter the line into the program
+  
+          BRA REPL              ; Next read-eval-print loop
+  
+_EXEC     STZ PROGOFF           ; Start at the beginning of the line
+  
+          LDA #<TBUF            ; Use the token buffer as the line we're going to run
+          STA PROGPTR
+          LDA #>TBUF
+          STA PROGPTR+1
+  
+          JSR EXSTMT            ; Execute the statement in the token buffer
+  
+          STZ OBUFLEN           ; Move to beginning of output buffer
+
+          LDA #MSG_READY        ; Print the ready message after each REPL operation
+          JSR PUTMSG
+          JSR FLUSH
+  
+          BRA REPL              ; Next read-eval-print loop
+
+;
+; INIT
+;
+; Initialization routine for Cody BASIC. Called at startup and when a program returns
+; from a binary program to restore some sensible defaults.
+;
+; This routine affects too many variables to mention each. Refer to the source instead.
+;
+INIT      SEI                 ; Shut off interrupts
 
           LDA #<CHAR_BASE     ; Copy ROM characters into video memory region on startup
           STA MEMDPTR
@@ -6565,63 +6633,9 @@ MAIN      SEI                 ; Shut off interrupts
           JSR SCREENCLR         ; Clear the screen on startup
 
           JSR NEWPROG           ; Clear memory and reset variables
-    
-          JSR CARTCHECK         ; Check for cartridge plugged in
-          BEQ BASIC
-  
-          STZ IOMODE            ; Cartridge found, load and run binary instead of BASIC
-          STZ IOBAUD
-          JMP LOADBIN
+
+          RTS                   ; All done
           
-BASIC     TSX                   ; Preserve the stack register for unwinding on error conditions
-          STX STACKREG
-
-          STZ OBUFLEN           ; Move to beginning of the output buffer
-  
-          LDA #MSG_GREET        ; Print the welcome message
-          JSR PUTMSG
-          JSR FLUSH
-  
-          LDA #MSG_READY        ; Print the ready message
-          JSR PUTMSG
-          JSR FLUSH
-  
-          CLI                   ; Enable interrupts and drop through to the REPL loop
-  
-REPL      STZ RUNMODE           ; Clear out RUNMODE
-
-          STZ IOMODE            ; Direct all IO to screen and keyboard
-
-          JSR READKBD           ; Read a line of input and advance the screen
-          JSR SCREENADV
-
-          JSR TOKENIZE          ; Tokenize the input
-  
-          LDA TBUF              ; Line number to add or execute the line immediately?
-          CMP #$FF
-          BNE _EXEC
-
-          JSR ENTERLINE         ; Enter the line into the program
-  
-          BRA REPL              ; Next read-eval-print loop
-  
-_EXEC     STZ PROGOFF           ; Start at the beginning of the line
-  
-          LDA #<TBUF            ; Use the token buffer as the line we're going to run
-          STA PROGPTR
-          LDA #>TBUF
-          STA PROGPTR+1
-  
-          JSR EXSTMT            ; Execute the statement in the token buffer
-  
-          STZ OBUFLEN           ; Move to beginning of output buffer
-
-          LDA #MSG_READY        ; Print the ready message after each REPL operation
-          JSR PUTMSG
-          JSR FLUSH
-  
-          BRA REPL              ; Next read-eval-print loop
-
 ;
 ; CARTCHECK
 ;
