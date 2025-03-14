@@ -2,7 +2,7 @@
 ; codybasic.asm
 ; BASIC ROM (and related code) for the Cody Computer
 ; 
-; Copyright 2024 Frederick John Milens III, The Cody Computer Developers.
+; Copyright 2024-2025 Frederick John Milens III, The Cody Computer Developers.
 ; 
 ; In memory of Cody Biliter-Milens (2006-2020).
 ; We still love you so very, very much.
