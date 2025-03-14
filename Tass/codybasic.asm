@@ -6871,7 +6871,7 @@ _SYS      JMP RAISE_SYS       ; Indicate IO error during read
 ; with a starting address followed by an ending address (to determine how many
 ; bytes should be read). Once the program is loaded the routine jumps to the
 ; starting address and typically does not return. If it does the routine jumps
-; back to MAIN to restart the Cody Computer (results may vary depending on the
+; back to BASIC to restart the interpreter (results may vary depending on the
 ; system's previous state).
 ;
 ; Uses:
@@ -6957,7 +6957,7 @@ _DONE     STZ RUNMODE         ; Ensure run mode is zero before jumping to loaded
           
           JSR _JUMP
           
-          JMP MAIN            ; If it returns for some reason, start all over and hope
+          JMP BASIC           ; If it returns for some reason, restart BASIC and hope
 
 _JUMP     JMP (PROGPTR)       ; Jump to the load address (indirect JSR workaround)
 
