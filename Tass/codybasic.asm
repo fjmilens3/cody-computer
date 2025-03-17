@@ -153,6 +153,7 @@ PROGTOP   = $44       ; Pointer to the top of the current program (2 bytes)
 UARTPTR   = $46       ; Base pointer to the current UART (2 bytes)
 DATAPTR   = $48       ; Pointer to the next line for DATA statements (2 bytes)
 DBUFPOS   = $4A       ; Index in the data buffer for READ statements
+PROGEND   = $4B       ; Boundary page for program memory (can be updated/overridden)
 
 TOKENIZEL = $4E       ; Tokenizer binary search L and R values for tokens
 TOKENIZER = $4F
@@ -217,7 +218,7 @@ SCRRAM  = $C400           ; Base of screen memory
 COLRAM  = $D800           ; Base of color memory
 
 PROGMEM = $0200           ; Base of program memory for Cody Basic
-PROGEND = $6500           ; End of program memory for Cody Basic
+PROGMAX = $6500           ; Default end of program memory for Cody Basic
 DATAMEM = $6600           ; Base of data memory for Cody Basic
 
 ARRA    = DATAMEM+$0000   ; Array variable memory locations (26 variables * 128 words each)
@@ -3076,7 +3077,7 @@ _NEW      LDA TBUFLEN         ; If nothing on the new line, don't insert anythin
           BRA _INS            ; If so, we can just insert without copying memory to make space
   
 _MOV      LDA LINEPTR+1       ; If we're on the last page of program memory just say we're out
-          CMP #>PROGEND
+          CMP PROGEND
           BEQ _SYS
           
           LDA LINEPTR+0       ; Use the insertion position as source pointer to move memory
@@ -3129,7 +3130,7 @@ _SYS      JMP RAISE_SYS       ; Indicate we're out of BASIC program memory
 ;   MEMDPTR       Used internally to copy memory
 ;
 INSLINE   LDA LINEPTR+1       ; If we're on the last page of program memory just say we're out
-          CMP #>PROGEND
+          CMP PROGEND
           BEQ _SYS
           
           LDA TBUFLEN         ; Store token buffer length as first byte in line
@@ -6594,7 +6595,10 @@ ISRSTUB   JMP (ISRPTR)
 ;
 ; This routine affects too many variables to mention each. Refer to the source instead.
 ;
-MAIN      JSR INIT              ; Run initialization on startup
+MAIN      LDA #>PROGMAX         ; Set the top of program memory to the default page
+          STA PROGEND
+
+          JSR INIT              ; Run initialization on startup
           
           JSR CARTCHECK         ; Check for cartridge plugged in
           BEQ BASIC
@@ -6658,7 +6662,9 @@ _EXEC     STZ PROGOFF           ; Start at the beginning of the line
 ; INIT
 ;
 ; Initialization routine for Cody BASIC. Called at startup and when a program returns
-; from a binary program to restore some sensible defaults.
+; from a binary program to restore some sensible defaults. Note that PROGEND is not
+; reset by this routine so that expansion cartridges and binary programs can load in
+; resident programs at the top of program memory and move down the boundary location.
 ;
 ; This routine affects too many variables to mention each. Refer to the source instead.
 ;
