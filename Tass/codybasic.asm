@@ -704,6 +704,107 @@ CHRSET
 .BYTE $00,$00,$00,$00,$00,$00,$00,$00
 .BYTE $00,$00,$00,$00,$00,$00,$00,$00
 
+; Token string table (layout must be exact, do not modify!)
+
+* = $E800
+
+STR_NEW
+  .NULL "NEW"
+STR_LIST
+  .NULL "LIST"
+STR_LOAD
+  .NULL "LOAD"
+STR_SAVE
+  .NULL "SAVE"
+STR_RUN
+  .NULL "RUN"
+STR_REM
+  .NULL "REM"
+STR_IF
+  .NULL "IF"
+STR_THEN
+  .NULL "THEN"
+STR_GOTO
+  .NULL "GOTO"
+STR_GOSUB
+  .NULL "GOSUB"
+STR_RETURN
+  .NULL "RETURN"
+STR_FOR
+  .NULL "FOR"
+STR_TO
+  .NULL "TO"
+STR_NEXT
+  .NULL "NEXT"
+STR_POKE
+  .NULL "POKE"
+STR_INPUT
+  .NULL "INPUT"
+STR_PRINT
+  .NULL "PRINT"
+STR_OPEN
+  .NULL "OPEN"
+STR_CLOSE
+  .NULL "CLOSE"
+STR_READ
+  .NULL "READ"
+STR_RESTORE
+  .NULL "RESTORE"
+STR_DATA
+  .NULL "DATA"
+STR_END
+  .NULL "END"
+STR_SYS
+  .NULL "SYS"
+STR_AT
+  .NULL "AT"
+STR_TAB
+  .NULL "TAB"
+STR_SUB
+  .NULL "SUB$"
+STR_CHR
+  .NULL "CHR$"
+STR_STR
+  .NULL "STR$"
+STR_TI
+  .NULL "TI"
+STR_PEEK
+  .NULL "PEEK"
+STR_RND
+  .NULL "RND"
+STR_NOT
+  .NULL "NOT"
+STR_ABS
+  .NULL "ABS"
+STR_SQR
+  .NULL "SQR"
+STR_AND
+  .NULL "AND"
+STR_OR
+  .NULL "OR"
+STR_XOR
+  .NULL "XOR"
+STR_MOD
+  .NULL "MOD"
+STR_VAL
+  .NULL "VAL"
+STR_LEN
+  .NULL "LEN"
+STR_ASC
+  .NULL "ASC"
+STR_LE
+  .NULL "<="
+STR_GE
+  .NULL ">="
+STR_NE
+  .NULL "<>"
+STR_LT
+  .NULL "<"
+STR_GT
+  .NULL ">"
+STR_EQ
+  .NULL "="
+  
 ;
 ; MEMFILL
 ;
@@ -1977,9 +2078,12 @@ PUTMSG    PHA                     ; Preserve registers
           LDA MSGTABLE_L,Y        ; Get message string low byte
           STA MEMSPTR
           
-          LDA MSGTABLE_H,Y        ; Get message string high byte
-          STA MEMSPTR+1
-          
+          LDA #MSGTABLE_H         ; Calculate message string high byte
+          CPY #MSG_TOKENS
+          BCC _HIBYTE
+          LDA #TOKTABLE_H
+_HIBYTE   STA MEMSPTR+1
+
           LDY #0                  ; Start at beginning of the string
           
 _LOOP     LDA (MEMSPTR),Y         ; Load the next character and check for terminating NUL
@@ -2658,7 +2762,7 @@ _TOKCOMP  CLC                 ; Calculate our position in the token lookup table
           
           LDA TOKTABLE_L,X    ; Put the token's address in the memory destination pointer
           STA MEMDPTR
-          LDA TOKTABLE_H,X
+          LDA #TOKTABLE_H
           STA MEMDPTR+1
           
           PLX
@@ -6972,7 +7076,8 @@ _READSER  JSR SERIALGET       ; Busy-wait for another byte
           BCC _READSER
           RTS
 
-; Pointer table for messages/tokens (order is important!)
+; Low-byte pointer table for messages/tokens (order is important!)
+; See below for high bytes
 
 MSGTABLE_L
   .BYTE <STR_GREET
@@ -7033,68 +7138,17 @@ TOKTABLE_L
   .BYTE <STR_LT
   .BYTE <STR_GT
   .BYTE <STR_EQ
-  
-MSGTABLE_H
-  .BYTE >STR_GREET
-  .BYTE >STR_READY
-  .BYTE >STR_ERROR
-  .BYTE >STR_IN
-ERRTABLE_H
-  .BYTE >STR_BREAK
-  .BYTE >STR_SYNTAX
-  .BYTE >STR_LOGIC
-  .BYTE >STR_SYSTEM
-TOKTABLE_H
-  .BYTE >STR_NEW
-  .BYTE >STR_LIST
-  .BYTE >STR_LOAD
-  .BYTE >STR_SAVE
-  .BYTE >STR_RUN
-  .BYTE >STR_REM
-  .BYTE >STR_IF
-  .BYTE >STR_THEN
-  .BYTE >STR_GOTO
-  .BYTE >STR_GOSUB
-  .BYTE >STR_RETURN
-  .BYTE >STR_FOR
-  .BYTE >STR_TO
-  .BYTE >STR_NEXT
-  .BYTE >STR_POKE
-  .BYTE >STR_INPUT
-  .BYTE >STR_PRINT
-  .BYTE >STR_OPEN
-  .BYTE >STR_CLOSE
-  .BYTE >STR_READ
-  .BYTE >STR_RESTORE
-  .BYTE >STR_DATA
-  .BYTE >STR_END
-  .BYTE >STR_SYS
-  .BYTE >STR_AT
-  .BYTE >STR_TAB
-  .BYTE >STR_SUB
-  .BYTE >STR_CHR
-  .BYTE >STR_STR
-  .BYTE >STR_TI
-  .BYTE >STR_PEEK
-  .BYTE >STR_RND
-  .BYTE >STR_NOT
-  .BYTE >STR_ABS
-  .BYTE >STR_SQR
-  .BYTE >STR_AND
-  .BYTE >STR_OR
-  .BYTE >STR_XOR
-  .BYTE >STR_MOD
-  .BYTE >STR_VAL
-  .BYTE >STR_LEN
-  .BYTE >STR_ASC
-  .BYTE >STR_LE
-  .BYTE >STR_GE
-  .BYTE >STR_NE
-  .BYTE >STR_LT
-  .BYTE >STR_GT
-  .BYTE >STR_EQ
 
-; String table 
+; Constants for token and message table entry high bytes
+; Most are identical, tokens and other messages are page-aligned
+; to save space
+
+TOKTABLE_H = >STR_NEW
+MSGTABLE_H = >STR_GREET
+
+; Message string table (layout must be exact, do not modify!)
+
+* = $FFA0
 
 STR_GREET
   .NULL $0A, "   **** CODY COMPUTER BASIC V1.0 ****", $0A
@@ -7112,103 +7166,7 @@ STR_LOGIC
   .NULL "LOGIC"
 STR_SYSTEM
   .NULL "SYSTEM"
-STR_NEW
-  .NULL "NEW"
-STR_LIST
-  .NULL "LIST"
-STR_LOAD
-  .NULL "LOAD"
-STR_SAVE
-  .NULL "SAVE"
-STR_RUN
-  .NULL "RUN"
-STR_REM
-  .NULL "REM"
-STR_IF
-  .NULL "IF"
-STR_THEN
-  .NULL "THEN"
-STR_GOTO
-  .NULL "GOTO"
-STR_GOSUB
-  .NULL "GOSUB"
-STR_RETURN
-  .NULL "RETURN"
-STR_FOR
-  .NULL "FOR"
-STR_TO
-  .NULL "TO"
-STR_NEXT
-  .NULL "NEXT"
-STR_POKE
-  .NULL "POKE"
-STR_INPUT
-  .NULL "INPUT"
-STR_PRINT
-  .NULL "PRINT"
-STR_OPEN
-  .NULL "OPEN"
-STR_CLOSE
-  .NULL "CLOSE"
-STR_READ
-  .NULL "READ"
-STR_RESTORE
-  .NULL "RESTORE"
-STR_DATA
-  .NULL "DATA"
-STR_END
-  .NULL "END"
-STR_SYS
-  .NULL "SYS"
-STR_AT
-  .NULL "AT"
-STR_TAB
-  .NULL "TAB"
-STR_SUB
-  .NULL "SUB$"
-STR_CHR
-  .NULL "CHR$"
-STR_STR
-  .NULL "STR$"
-STR_TI
-  .NULL "TI"
-STR_PEEK
-  .NULL "PEEK"
-STR_RND
-  .NULL "RND"
-STR_NOT
-  .NULL "NOT"
-STR_ABS
-  .NULL "ABS"
-STR_SQR
-  .NULL "SQR"
-STR_AND
-  .NULL "AND"
-STR_OR
-  .NULL "OR"
-STR_XOR
-  .NULL "XOR"
-STR_MOD
-  .NULL "MOD"
-STR_VAL
-  .NULL "VAL"
-STR_LEN
-  .NULL "LEN"
-STR_ASC
-  .NULL "ASC"
-STR_LE
-  .NULL "<="
-STR_GE
-  .NULL ">="
-STR_NE
-  .NULL "<>"
-STR_LT
-  .NULL "<"
-STR_GT
-  .NULL ">"
-STR_EQ
-  .NULL "="
-
+  
 ;
 ; PUTHEX
 ;
