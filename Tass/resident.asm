@@ -3,12 +3,12 @@
 ; A simple demo loading machine code into memory as a resident application.
 ;
 ; This is a short binary program that is loaded with a base address of
-; $6500, which is an unused page that sits just above program memory. In
-; the program is a routine loaded at $6510 that will cycle through the
-; border colors on the Cody Computer.
+; $6300. The initialization routine moves the end of program memory down
+; before returning to BASIC. Within the binary is a routine loaded at
+; $6400 that will cycle through the border colors on the Cody Computer.
 ;
 ; When you load this program it's loaded into that page and then returns
-; to Cody BASIC. You can then call the loaded routine by running SYS 25872
+; to Cody BASIC. You can then call the loaded routine by running SYS 25600
 ; in BASIC.
 ;
 ; Copyright 2025 Frederick John Milens III, The Cody Computer Developers.
@@ -31,7 +31,7 @@
 ;
 ;   64tass --mw65c02 --nostart -o resident.bin resident.asm
 ;
-ADDR      = $6500               ; The actual loading address of the program
+ADDR      = $6300               ; The actual loading address of the program
 
 VID_BLNK  = $D000               ; Video blanking status register
 VID_CNTL  = $D001               ; Video control register
@@ -41,6 +41,7 @@ VID_SCRL  = $D004               ; Video scroll register
 VID_SCRC  = $D005               ; Video screen common colors register
 VID_SPRC  = $D006               ; Video sprite control register
 
+PROGEND   = $4B                 ; Boundary page for program memory
 TEMP      = $FF                 ; Temporary variable in zero page
 
 ; Program header for Cody Basic's loader (needs to be first)
@@ -55,21 +56,26 @@ TEMP      = $FF                 ; Temporary variable in zero page
 ;
 ; MAIN
 ;
-; Does nothing in this example. Cody BASIC will load the resident routines into
-; RAM at the load address, so here we just return back to BASIC.
+; Sets the end of program memory to the program's load address. Cody BASIC will
+; load the resident routines into RAM at the load address, so we return to BASIC.
 ;
-MAIN        RTS
+MAIN        LDA #>ADDR          ; Move the program memory bounds down
+            STA PROGEND
+
+            RTS
 
 ;
 ; CYCLE
 ;
 ; Increments the border color in the video color register ($D002) by one.
 ;
-; This should be loaded at $6510 (decimal 25872) so that it can be called
-; via "SYS 25872". A more advanced example could pass data in zero page or
-; via BASIC variables. This is just a simple demonstration.
+; This should be loaded at $6400 (decimal 25600) so that it can be called
+; via "SYS 25600". A more advanced example could pass data in zero page or
+; via BASIC variables. You could also set up a jump table starting at 
+; $6400 (25600) to make the code more independent and easier to remember
+; from BASIC. This is just a simple demonstration.
 ;
-* = $6510                       ; Start address of the color-cycle routine
+* = $6400                       ; Start address of the color-cycle routine
 
 CYCLE       PHA                 ; Preserve registers
             
@@ -87,5 +93,5 @@ CYCLE       PHA                 ; Preserve registers
             RTS
 
 LAST                            ; End of the entire program
-      
+
 .ENDLOGICAL
