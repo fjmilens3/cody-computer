@@ -855,9 +855,12 @@ scanline
                 call    #horizontal_sync
                 call    #back_porch                   
                 
-                ' By default we have 40 waitvids (160 pixels / 4 pixels per waitvid)
+                ' Switch to two-color mode, 8 pixels per waitvid
+                mov     VCFG, hiivcfg
+                mov     VSCL, hivsclactv
+                
+                ' By default we have 40 waitvids (320 pixels / 8 pixels per waitvid)
                 mov     count, #40
-                mov     VSCL, vsclactv
                 
                 ' If horizontal scrolling, draw fewer pixels and a bigger border 
                 test    control, #%00000100 wz
@@ -885,6 +888,10 @@ if_nz           waitvid border, #0
                 test    control, #%00000100 wz
 if_nz           waitvid border, #0
 
+                ' Switch back to four-color mode, 4 pixels per waitvid
+                mov     VCFG, ivcfg
+                mov     VSCL, vsclactv
+
                 call    #front_porch
 
 scanline_ret  ret
@@ -911,6 +918,9 @@ vsclbp                  long    1<<12+(527-304-16*9)+213+20                     
 vsclactv                long    16<<12+16*4                                     ' NTSC 16 PLLA per pixel, 4 pixels per frame
 vsclline                long    1<<12+16*4*40                                   ' NTSC line safe area
 vsclfp                  long    1<<12+214+86+20                                 ' NTSC overscan (214) + front porch
+
+hivsclactv              long    8<<12+8*8                                       ' NTSC 8 PLLA per pixel, 8 pixels per frame
+hiivcfg                 long    %0_10_0_0_1_000_00000000000_011_0_00000111      ' Hires video Configuration Register settings
 
 ' Other variables and constants
 
