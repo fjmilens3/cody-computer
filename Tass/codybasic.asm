@@ -710,101 +710,101 @@ CHRSET
 * = $E800
 
 STR_NEW
-  .NULL "NEW"
+  .SHIFT "NEW"
 STR_LIST
-  .NULL "LIST"
+  .SHIFT "LIST"
 STR_LOAD
-  .NULL "LOAD"
+  .SHIFT "LOAD"
 STR_SAVE
-  .NULL "SAVE"
+  .SHIFT "SAVE"
 STR_RUN
-  .NULL "RUN"
+  .SHIFT "RUN"
 STR_REM
-  .NULL "REM"
+  .SHIFT "REM"
 STR_IF
-  .NULL "IF"
+  .SHIFT "IF"
 STR_THEN
-  .NULL "THEN"
+  .SHIFT "THEN"
 STR_GOTO
-  .NULL "GOTO"
+  .SHIFT "GOTO"
 STR_GOSUB
-  .NULL "GOSUB"
+  .SHIFT "GOSUB"
 STR_RETURN
-  .NULL "RETURN"
+  .SHIFT "RETURN"
 STR_FOR
-  .NULL "FOR"
+  .SHIFT "FOR"
 STR_TO
-  .NULL "TO"
+  .SHIFT "TO"
 STR_NEXT
-  .NULL "NEXT"
+  .SHIFT "NEXT"
 STR_POKE
-  .NULL "POKE"
+  .SHIFT "POKE"
 STR_INPUT
-  .NULL "INPUT"
+  .SHIFT "INPUT"
 STR_PRINT
-  .NULL "PRINT"
+  .SHIFT "PRINT"
 STR_OPEN
-  .NULL "OPEN"
+  .SHIFT "OPEN"
 STR_CLOSE
-  .NULL "CLOSE"
+  .SHIFT "CLOSE"
 STR_READ
-  .NULL "READ"
+  .SHIFT "READ"
 STR_RESTORE
-  .NULL "RESTORE"
+  .SHIFT "RESTORE"
 STR_DATA
-  .NULL "DATA"
+  .SHIFT "DATA"
 STR_END
-  .NULL "END"
+  .SHIFT "END"
 STR_SYS
-  .NULL "SYS"
+  .SHIFT "SYS"
 STR_AT
-  .NULL "AT"
+  .SHIFT "AT"
 STR_TAB
-  .NULL "TAB"
+  .SHIFT "TAB"
 STR_SUB
-  .NULL "SUB$"
+  .SHIFT "SUB$"
 STR_CHR
-  .NULL "CHR$"
+  .SHIFT "CHR$"
 STR_STR
-  .NULL "STR$"
+  .SHIFT "STR$"
 STR_TI
-  .NULL "TI"
+  .SHIFT "TI"
 STR_PEEK
-  .NULL "PEEK"
+  .SHIFT "PEEK"
 STR_RND
-  .NULL "RND"
+  .SHIFT "RND"
 STR_NOT
-  .NULL "NOT"
+  .SHIFT "NOT"
 STR_ABS
-  .NULL "ABS"
+  .SHIFT "ABS"
 STR_SQR
-  .NULL "SQR"
+  .SHIFT "SQR"
 STR_AND
-  .NULL "AND"
+  .SHIFT "AND"
 STR_OR
-  .NULL "OR"
+  .SHIFT "OR"
 STR_XOR
-  .NULL "XOR"
+  .SHIFT "XOR"
 STR_MOD
-  .NULL "MOD"
+  .SHIFT "MOD"
 STR_VAL
-  .NULL "VAL"
+  .SHIFT "VAL"
 STR_LEN
-  .NULL "LEN"
+  .SHIFT "LEN"
 STR_ASC
-  .NULL "ASC"
+  .SHIFT "ASC"
 STR_LE
-  .NULL "<="
+  .SHIFT "<="
 STR_GE
-  .NULL ">="
+  .SHIFT ">="
 STR_NE
-  .NULL "<>"
+  .SHIFT "<>"
 STR_LT
-  .NULL "<"
+  .SHIFT "<"
 STR_GT
-  .NULL ">"
+  .SHIFT ">"
 STR_EQ
-  .NULL "="
+  .SHIFT "="
   
 ;
 ; MEMFILL
@@ -2086,15 +2086,19 @@ PUTMSG    PHA                     ; Preserve registers
 _HIBYTE   STA MEMSPTR+1
 
           LDY #0                  ; Start at beginning of the string
-          
-_LOOP     LDA (MEMSPTR),Y         ; Load the next character and check for terminating NUL
-          BEQ _END
 
-          JSR PUTOUT              ; Put the character into the output buffer
+_LOOP     LDA (MEMSPTR),Y         ; Load the next character
           
+          BIT #$80                ; Test top bit to see if this is the last char
+          PHP
+
+          AND #$7F                ; Put the character into the output buffer
+          JSR PUTOUT
+
           INY                     ; Increment position in string
-          
-          BRA _LOOP               ; Move on to next character
+
+          PLP                     ; Was this the last char?
+          BEQ _LOOP
 
 _END      PLY                     ; Restore registers
           PLA
@@ -2768,27 +2772,37 @@ _TOKCOMP  CLC                 ; Calculate our position in the token lookup table
           
           PLX
           
-          LDY #$FF            ; Use the y register for our position in the strings
+          LDY #$00            ; Use the y register for our position in the strings
           
-_TOKCHAR  INY                 ; Move to next char
-
-          LDA (MEMDPTR),Y     ; If we've reached the end of the token we're testing against, we have a match
-          BEQ _TOKYES
+_TOKCHAR  LDA (MEMDPTR),Y     ; Get the destination char and test the high bit for the end of string
+          BIT #$80
+          PHP
+          
+          AND #$7F            ; Mask out the valid portion of the char for later comparision
+          STA SYS_A
           
           LDA (MEMSPTR),Y     ; Get the next character from the input string and UPPERCASE it
           JSR TOUPPER
           
-          CMP (MEMDPTR),Y     ; Compare it to the token string and see if we still match
-          BEQ _TOKCHAR
+          CMP SYS_A           ; Compare it to the token string and see if we still match
+          BEQ _TOKOK
           BCC _TOKLO
           BCS _TOKHI
+        
+_TOKOK    INY                 ; Move to next char
+
+          PLP                 ; If we've reached the end of the token we're testing against, we have a match
+          BNE _TOKYES
+          BRA _TOKCHAR
           
-_TOKHI    TXA                 ; Input token was greater, move to top partition
+_TOKHI    PLP
+          TXA                 ; Input token was greater, move to top partition
           INC A
           STA TOKENIZEL
           BRA _TOKNEXT
           
-_TOKLO    TXA                 ; Input token was less, move to bottom partition
+_TOKLO    PLP
+          TXA                 ; Input token was less, move to bottom partition
           DEC A
           STA TOKENIZER
           BRA _TOKNEXT
@@ -7157,21 +7171,21 @@ MSGTABLE_H = >STR_GREET
 * = $FFA0
 
 STR_GREET
-  .NULL $0A, "   **** CODY COMPUTER BASIC V1.0 ****", $0A
+  .SHIFT $0A, "   **** CODY COMPUTER BASIC V1.0 ****", $0A
 STR_READY
-  .NULL $0A, "READY.", $0A
+  .SHIFT $0A, "READY.", $0A
 STR_ERROR
-  .NULL " ERROR"
+  .SHIFT " ERROR"
 STR_IN
-  .NULL " IN "
+  .SHIFT " IN "
 STR_BREAK
-  .NULL "BREAK"
+  .SHIFT "BREAK"
 STR_SYNTAX
-  .NULL "SYNTAX"
+  .SHIFT "SYNTAX"
 STR_LOGIC
-  .NULL "LOGIC"
+  .SHIFT "LOGIC"
 STR_SYSTEM
-  .NULL "SYSTEM"
+  .SHIFT "SYSTEM"
   
 ;
 ; PUTHEX
