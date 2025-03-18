@@ -872,7 +872,14 @@ if_nz           sub     count, #2
                 
 :loop           
                 ' Read the next four pixels from the scanline buffer
-                rdlong  colors, source
+                'rdlong  colors, source
+                
+                mov     temp, #PATTERN
+                add     temp, pattern_row
+                movs    :data, temp
+                nop
+:data           mov     pixels, 0-0
+
                 
                 ' If the display is enabled, draw the pixels from the buffer
                 ' If the display is shut off, draw the border color instead
@@ -891,7 +898,11 @@ if_nz           waitvid border, #0
                 ' Switch back to four-color mode, 4 pixels per waitvid
                 mov     VCFG, ivcfg
                 mov     VSCL, vsclactv
-
+                
+                ' Next pattern row
+                add     pattern_row, #1
+                and     pattern_row, #%111
+                
                 call    #front_porch
 
 scanline_ret  ret
@@ -929,7 +940,7 @@ count                   long    $0                  ' General-purpose counting v
 temp                    long    $0                  ' General-purpose temporary value
 
 pixels                  long    %%3210              ' Pixel pattern for four-color WAITVID operations
-colors                  long    $0                  ' Current colors (pixels) to display on a scanline 
+colors                  long    $07_0C              ' Current colors (pixels) to display on a scanline 
 border                  long    $0                  ' Current border color to use on borders/blanked screen
 control                 long    $0                  ' Current control register value
 source                  long    $0                  ' Current pixel data source (pointer to a scanline buffer)
@@ -968,4 +979,15 @@ COLOR_REG_OFFSET        long    $3002
 ZERO                    long    $0                  ' Constants for updating the vertical blank register
 ONE                     long    $1
 
+pattern_row             long    0
+
+PATTERN                 long    %00000000
+                        long    %00111000
+                        long    %01101100
+                        long    %11000110
+                        long    %11111110
+                        long    %11000110
+                        long    %11000110
+                        long    %11000110 
+                        
                         fit     496
