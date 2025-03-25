@@ -273,6 +273,81 @@ if_z            add     source_ptr, chrset_ptr
 render_chars_lo_ret    ret
 
 '
+' Renders the characters for the current scanline for the high resolution
+' multicolor mode (320, 8 colors per square). For each character the
+' value in screen memory is read, then the character data for the current
+' line is fetched. The characters bytes and colors are written into the
+' scanline buffer so they can be unpacked by the NTSC generator cog.
+' 
+' In bitmap mode the layout is slightly different. Data is read as in
+' character mode, but the screen memory is arranged as a sequence of 1000
+' multicolor "characters" instead. The actual character memory is unused.
+'
+render_chars_hi
+                ' Set up the output pointer
+                mov     dest_ptr, buffer_ptr
+                
+                ' Precalculate the current offset for each character based on the scanline
+                mov     char_offset_y, curr_scanline
+                add     char_offset_y, adjustv
+                and     char_offset_y, #%0111
+                
+                ' Determine offset in the screen and color memory based on the current row
+                mov     screen_memory_offset, curr_scanline
+                shr     screen_memory_offset, #3
+                add     screen_memory_offset, #SCREEN_OFFSET_TABLE
+                movs    :load_offset, screen_memory_offset
+                nop
+                
+:load_offset    mov     screen_memory_offset, 0_0
+                
+                ' Calculate the locations in color and screen memory using the offset above
+                mov     curr_colors_ptr, colmem_ptr
+                add     curr_colors_ptr, screen_memory_offset
+                
+                test    controlreg, #%00010000 wz
+if_z            mov     curr_screen_adv, #1
+if_nz           mov     curr_screen_adv, #8
+if_nz           shl     screen_memory_offset, #3
+                
+                mov     curr_screen_ptr, scrmem_ptr
+                add     curr_screen_ptr, screen_memory_offset
+                
+                mov     chars_remaining, #40
+                
+                ' Read the per-character colorinformation and look up the Propeller colors
+:char_loop      rdbyte  color_data, curr_colors_ptr
+                
+                shl     color_data, #1
+                add     color_data, lookup_ptr
+                
+                rdword  color_data, color_data
+                add     curr_colors_ptr, #1
+                
+                ' Fetch and reverse the character bits
+                test    controlreg, #%00010000              wz
+if_nz           mov     source_ptr, curr_screen_ptr
+if_z            rdbyte  source_ptr, curr_screen_ptr
+if_z            shl     source_ptr, #3
+if_z            add     source_ptr, chrset_ptr
+                add     source_ptr, char_offset_y
+                rdbyte  pixel_data, source_ptr
+                rev     pixel_data, #8
+                
+                ' Write the pixel and color information to the buffer
+                wrword  pixel_data, dest_ptr
+                add     dest_ptr, #2
+                
+                wrword  color_data, dest_ptr
+                add     dest_ptr, #2
+                
+                ' Move to the next character
+                add     curr_screen_ptr, curr_screen_adv
+                djnz    chars_remaining, #:char_loop                        
+                
+render_chars_hi_ret    ret
+
+'
 ' Renders the sprites for the current scanline. The code loops through each sprite
 ' in the current sprite bank to determine what sprites to draw (and where), and the
 ' actual sprite bytes are read from the sprite pointer locations in the registers.
