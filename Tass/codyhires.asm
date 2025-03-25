@@ -133,19 +133,6 @@ MAIN        LDA #<FONT_DATA       ; Copy the C64 character ROM
             STA MEMSIZE+1
             
             JSR MEMCOPYUP
-            
-.comment
-            LDX #0
-            
-_LOOP       TXA
-            STA SCRRAM,X
-            
-            LDA #$16
-            STA COLRAM,X
-            
-            INX
-            BNE _LOOP
-.endcomment
 
             LDA #$E0            ; Point the video hardware to default color memory, border color black
             STA VID_COLR
