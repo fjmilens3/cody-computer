@@ -23,7 +23,9 @@
 ' Implements a single line renderer for the Cody Computer's video subsystem. A total
 ' of four renderers (each running in their own cog) are used to generate output data
 ' for video. Each line consists of 160 visible pixels containing 40 characters and
-' up to 8 sprites from the current sprite bank.
+' up to 8 sprites from the current sprite bank. In high-resolution mode each line 
+' consists of 320 visible pixels containing 40 characters but no sprites; only two
+' colors per square are supported in this mode and the output format is different.
 ' 
 ' Refer to the video renderer for general documentation.
 ' 
@@ -280,10 +282,12 @@ render_chars_lo_ret    ret
 
 '
 ' Renders the characters for the current scanline for the high resolution
-' multicolor mode (320, 8 colors per square). For each character the
+' two-color mode (320, 2 colors per 8x8 square). For each character the
 ' value in screen memory is read, then the character data for the current
 ' line is fetched. The characters bytes and colors are written into the
-' scanline buffer so they can be unpacked by the NTSC generator cog.
+' scanline buffer so they can be unpacked by the NTSC generator cog. In
+' order to avoid toggling the Propeller' video hardware between two and 
+' four color mode, the two colors are expanded to four colors in this step.
 ' 
 ' In bitmap mode the layout is slightly different. Data is read as in
 ' character mode, but the screen memory is arranged as a sequence of 1000

@@ -23,7 +23,10 @@
 ' Implements the video driver and related code for the Cody Computer. The Cody
 ' Computer supports a single video mode similar to multicolor character mode on
 ' the Commodore 64. Output is a non-interlaced NTSC signal, 262 lines without a
-' half-line, with the active display area being a 160x200 fat-pixel display.
+' half-line, with the active display area being a 160x200 fat-pixel display. In
+' high resolution mode the active display area becomes a 320x200 display with
+' only two colors. (However, even in the two-color mode, we use the Propeller's
+' four-color mode for output, thus avoiding toggling in the middle of a line).
 ' 
 ' The main driver program is responsible for outputting video signals from the
 ' Propeller's dedicated hardware. Rendering the data to send out is performed by
