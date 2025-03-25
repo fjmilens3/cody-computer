@@ -1,6 +1,6 @@
 ;
 ; codyhichar.asm
-; A high-reolution character mode demo displaying a PETSCII Commodore 64 graphic.
+; A high-resolution character mode demo displaying a PETSCII Commodore 64 graphic.
 ;
 ; The image is from "The Game Is Apaw!" by iLKke. The C64 font is taken
 ; from the US C64 character ROM. Copyright on the image and ROM remain
