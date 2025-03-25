@@ -1,5 +1,5 @@
 ;
-; codyhichar.asm
+; codyhibitmap.asm
 ; A high-resolution bitmap demo displaying a full bitmap graphic.
 ;
 ; The image is from "Scumm Bar" by Alakran. Copyright remains with the
