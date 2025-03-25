@@ -74,7 +74,7 @@ MEMSIZE   = $24       ; The size of memory to move for memory-related utility ro
 ; The starting point of the demo. Sets up the VID and copies all the data.
 ; Once the data is in place the high-resolution character mode is enabled.
 ;
-MAIN        LDA #<FONT_DATA   ; Copy the C64 character ROM
+MAIN        LDA #<FONT_DATA       ; Copy the C64 character ROM
             STA MEMSPTR
 
             LDA #>FONT_DATA
@@ -94,6 +94,47 @@ MAIN        LDA #<FONT_DATA   ; Copy the C64 character ROM
             
             JSR MEMCOPYUP
 
+            LDA #<SCREEN_DATA     ; Copy the screen data
+            STA MEMSPTR
+
+            LDA #>SCREEN_DATA
+            STA MEMSPTR+1
+
+            LDA #<SCRRAM
+            STA MEMDPTR
+
+            LDA #>SCRRAM
+            STA MEMDPTR+1
+
+            LDA #<1024
+            STA MEMSIZE
+
+            LDA #>1024
+            STA MEMSIZE+1
+            
+            JSR MEMCOPYUP
+            
+            LDA #<COLOR_DATA      ; Copy the color data
+            STA MEMSPTR
+
+            LDA #>COLOR_DATA
+            STA MEMSPTR+1
+
+            LDA #<COLRAM
+            STA MEMDPTR
+
+            LDA #>COLRAM
+            STA MEMDPTR+1
+
+            LDA #<1000
+            STA MEMSIZE
+
+            LDA #>1000
+            STA MEMSIZE+1
+            
+            JSR MEMCOPYUP
+            
+.comment
             LDX #0
             
 _LOOP       TXA
@@ -104,6 +145,7 @@ _LOOP       TXA
             
             INX
             BNE _LOOP
+.endcomment
 
             LDA #$E0            ; Point the video hardware to default color memory, border color black
             STA VID_COLR
@@ -434,6 +476,275 @@ FONT_DATA
   .BYTE $e7,$e7,$e7,$07,$07,$ff,$ff,$ff
   .BYTE $0f,$0f,$0f,$0f,$ff,$ff,$ff,$ff
   .BYTE $0f,$0f,$0f,$0f,$f0,$f0,$f0,$f0
+
+;
+; Screen RAM data from "The Game is Apaw!" by iLKke. See
+; https://csdb.dk/release/?id=123339 for the source. The
+; copyright remains with the original author.
+;
+SCREEN_DATA
+
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$e4
+  .BYTE $e4,$e4,$e4,$e4,$e4,$e4,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $69,$94,$88,$98,$32,$5f,$5f,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$e7,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$e5,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$69,$20
+  .BYTE $5f,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $90,$94,$8f,$09,$8e,$87,$e6,$e6
+  .BYTE $e6,$e6,$e6,$e6,$e6,$66,$e9,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$e6,$e6
+  .BYTE $e6,$e6,$e6,$e6,$e6,$e9,$a0,$d1
+  .BYTE $a0,$df,$e6,$e6,$e6,$e6,$e6,$5f
+  .BYTE $e6,$e6,$e9,$a0,$79,$64,$e6,$e6
+  .BYTE $e6,$e6,$e6,$e6,$e6,$5f,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$79,$64
+  .BYTE $e6,$e6,$e6,$e6,$e6,$a0,$d6,$d5
+  .BYTE $c9,$a0,$e6,$e9,$d7,$e6,$e6,$e6
+  .BYTE $e6,$e6,$e6,$e6,$e6,$e6,$e6,$e6
+  .BYTE $e6,$e9,$e6,$e6,$6f,$e6,$e6,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$e6,$e6
+  .BYTE $6f,$e6,$e6,$e9,$e6,$5f,$a0,$c2
+  .BYTE $c2,$a0,$e6,$d7,$d1,$e6,$e6,$e6
+  .BYTE $e6,$e6,$e6,$e6,$e6,$e6,$e6,$e6
+  .BYTE $e6,$5f,$df,$e6,$a0,$df,$e6,$a0
+  .BYTE $a0,$a0,$20,$a0,$20,$a0,$e6,$e9
+  .BYTE $a0,$e6,$e9,$a0,$e6,$e6,$5f,$ca
+  .BYTE $cb,$69,$66,$a0,$69,$e6,$e6,$e6
+  .BYTE $e9,$a0,$a0,$df,$e6,$e6,$e6,$e6
+  .BYTE $e6,$a0,$a0,$df,$5f,$a0,$df,$a0
+  .BYTE $a0,$a0,$20,$a0,$20,$a0,$e9,$a0
+  .BYTE $69,$e9,$a0,$a0,$e6,$e6,$e6,$5f
+  .BYTE $e6,$e6,$e6,$5f,$e6,$51,$e6,$e6
+  .BYTE $a0,$a0,$a0,$a0,$e9,$df,$e6,$e6
+  .BYTE $e6,$a0,$5f,$a0,$df,$5f,$a0,$f7
+  .BYTE $f7,$f7,$f7,$77,$f7,$f7,$a0,$69
+  .BYTE $e9,$a0,$69,$a0,$e6,$e6,$e6,$e6
+  .BYTE $69,$e6,$e6,$27,$e6,$e6,$e6,$e6
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$79,$64
+  .BYTE $e6,$5f,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$ae,$ba,$ae,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$69,$e6,$e6,$e6,$28
+  .BYTE $e6,$e6,$e9,$c0,$a0,$a0,$df,$e6
+  .BYTE $e6,$e6,$e6,$e6,$e6,$e6,$e6,$e6
+  .BYTE $e6,$e9,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$e8,$66,$e8,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$df,$e6,$d7,$e6,$e6
+  .BYTE $2e,$e6,$a0,$d5,$c9,$d1,$a0,$e6
+  .BYTE $e6,$e6,$e6,$e6,$e6,$e6,$e6,$e6
+  .BYTE $e6,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$e6,$e6,$e6,$e6
+  .BYTE $e6,$e9,$ba,$ca,$cb,$a0,$69,$e6
+  .BYTE $a0,$69,$e6,$e6,$e6,$e6,$e6,$e6
+  .BYTE $e6,$a0,$a0,$a0,$a0,$a0,$d7,$a0
+  .BYTE $a0,$66,$66,$66,$a0,$a0,$d7,$a0
+  .BYTE $a0,$a0,$a0,$a0,$e6,$e6,$e6,$51
+  .BYTE $e6,$e8,$e6,$ba,$69,$e6,$e6,$e6
+  .BYTE $69,$20,$e6,$e6,$e6,$e6,$e6,$e6
+  .BYTE $e6,$a0,$a0,$a0,$a0,$a0,$a0,$e9
+  .BYTE $a0,$79,$79,$79,$a0,$df,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$e6,$e6,$e6,$3a
+  .BYTE $e6,$a0,$69,$e6,$d7,$e6,$e6,$e6
+  .BYTE $20,$20,$a0,$a0,$a0,$df,$e6,$e6
+  .BYTE $44,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$5f,$a0,$69,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$44,$e6,$e6,$e6
+  .BYTE $e6,$e6,$e6,$e6,$e6,$e6,$e6,$e9
+  .BYTE $6c,$7b,$a0,$a0,$a0,$a0,$e6,$e6
+  .BYTE $e6,$5f,$a0,$a0,$a0,$a0,$a0,$5f
+  .BYTE $a0,$df,$14,$e9,$a0,$69,$a0,$a0
+  .BYTE $df,$76,$f7,$f7,$f7,$df,$e6,$e6
+  .BYTE $d1,$3a,$e6,$57,$e6,$e9,$a0,$a0
+  .BYTE $7c,$7e,$a0,$a0,$a0,$a0,$e6,$e6
+  .BYTE $e6,$4e,$5f,$a0,$a0,$a0,$a0,$20
+  .BYTE $20,$4e,$63,$4d,$20,$20,$a0,$a0
+  .BYTE $a0,$a0,$69,$e6,$a0,$a0,$e6,$6f
+  .BYTE $6f,$6f,$6f,$e6,$e6,$5f,$a0,$a0
+  .BYTE $20,$20,$a0,$a0,$a0,$a0,$df,$e6
+  .BYTE $e6,$e6,$e6,$5f,$a0,$a0,$a0,$df
+  .BYTE $a0,$a0,$a0,$a0,$a0,$e9,$a0,$a0
+  .BYTE $a0,$69,$4d,$e6,$a0,$a0,$e6,$a0
+  .BYTE $a0,$a0,$a0,$e6,$e6,$e6,$51,$e6
+  .BYTE $20,$20,$a0,$20,$a0,$a0,$a0,$a0
+  .BYTE $a0,$df,$e6,$27,$e6,$e6,$67,$a0
+  .BYTE $63,$77,$14,$77,$63,$a0,$65,$e6
+  .BYTE $e6,$e6,$e6,$e6,$a0,$a0,$e6,$a0
+  .BYTE $a0,$a0,$a0,$e6,$e6,$e6,$e6,$e6
+  .BYTE $20,$e9,$a0,$fe,$69,$5f,$a0,$a0
+  .BYTE $a0,$a0,$e6,$e6,$e6,$e6,$67,$66
+  .BYTE $20,$e9,$a0,$df,$20,$66,$65,$e6
+  .BYTE $e6,$e6,$e6,$e6,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$e6,$e6,$e6,$a0,$e6
+  .BYTE $20,$e3,$e3,$e3,$20,$20,$a0,$e2
+  .BYTE $a0,$a0,$a0,$a0,$df,$5f,$a0,$df
+  .BYTE $e9,$69,$51,$5f,$df,$e9,$a0,$69
+  .BYTE $e6,$e6,$e6,$e6,$5f,$a0,$a0,$a0
+  .BYTE $a0,$a0,$69,$e6,$e9,$a0,$a0,$69
+  .BYTE $20,$a0,$a0,$a0,$20,$20,$a0,$20
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$e5,$a0,$e7,$a0,$a0,$a0,$a0
+  .BYTE $e6,$e6,$e6,$7b,$e6,$e6,$e9,$a0
+  .BYTE $a0,$e6,$e6,$e6,$a0,$a0,$a0,$09
+  .BYTE $e9,$a0,$a0,$a0,$e9,$a0,$a0,$e9
+  .BYTE $a0,$69,$5f,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$65,$51,$67,$a0,$a0,$a0,$a0
+  .BYTE $df,$e9,$a0,$a0,$a0,$a0,$a0,$69
+  .BYTE $e9,$a0,$a0,$69,$a0,$a0,$a0,$0c
+  .BYTE $e4,$e4,$e4,$e4,$e4,$e4,$e4,$e4
+  .BYTE $69,$20,$20,$5f,$69,$a0,$a0,$a0
+  .BYTE $a0,$65,$20,$67,$a0,$a0,$5f,$a0
+  .BYTE $a0,$e4,$e4,$e4,$e4,$e4,$a0,$a0
+  .BYTE $e4,$e4,$69,$20,$a0,$a0,$a0,$0b
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $61,$e1,$61,$e1,$e3,$a0,$a0,$e5
+  .BYTE $a0,$65,$51,$67,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$61,$e9,$a0,$a0,$69,$0b
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $61,$20,$20,$e1,$a0,$a0,$a0,$e5
+  .BYTE $a0,$65,$20,$67,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+  .BYTE $a0,$a0,$61,$a0,$a0,$a0,$20,$05
+  .BYTE $00,$00,$ff,$ff,$ff,$ff,$00,$00
+  .BYTE $00,$00,$ff,$ff,$ff,$ff,$00,$00
+  .BYTE $00,$00,$ff,$ff,$ff,$ff,$00,$00
+
+;
+; Color RAM data from "The Game is Apaw!" by iLKke. See
+; https://csdb.dk/release/?id=123339 for the source. The
+; copyright remains with the original author.
+;
+COLOR_DATA
+
+  .BYTE $0c,$0c,$0c,$0c,$0c,$0c,$0c,$0c
+  .BYTE $0c,$0c,$0c,$0c,$0c,$0c,$0c,$0c
+  .BYTE $0c,$0c,$0c,$0c,$0c,$0c,$0c,$0c
+  .BYTE $0c,$0c,$0c,$0c,$0c,$0c,$0c,$0c
+  .BYTE $0c,$0c,$0c,$0c,$0c,$0c,$0c,$0c
+  .BYTE $0c,$ec,$ec,$ec,$ec,$0c,$0c,$0c
+  .BYTE $0c,$0c,$0c,$0c,$0c,$0c,$0c,$0c
+  .BYTE $0c,$6c,$bc,$1c,$bc,$6c,$0c,$0c
+  .BYTE $0c,$0c,$0c,$0c,$0c,$0c,$0c,$0c
+  .BYTE $0c,$0c,$0c,$0c,$0c,$0c,$0c,$0c
+  .BYTE $ec,$ec,$ec,$ec,$ec,$ec,$ec,$ec
+  .BYTE $ec,$ec,$ec,$ec,$ec,$ec,$3c,$0c
+  .BYTE $0c,$6c,$bc,$3c,$bc,$6c,$ec,$ec
+  .BYTE $ec,$ec,$ec,$ec,$ec,$1c,$1c,$1c
+  .BYTE $1c,$7c,$ec,$ec,$ec,$ec,$ec,$0c
+  .BYTE $ec,$ec,$3c,$3c,$3c,$fc,$ec,$ec
+  .BYTE $ec,$ec,$ec,$ec,$ec,$fc,$fc,$0c
+  .BYTE $0c,$6c,$bc,$3c,$bc,$6c,$fc,$fc
+  .BYTE $ec,$ec,$ec,$ec,$ec,$1c,$1c,$1c
+  .BYTE $1c,$7c,$ec,$1c,$1c,$ec,$ec,$ec
+  .BYTE $ec,$ec,$ec,$ec,$ec,$ec,$ec,$ec
+  .BYTE $ec,$2c,$ec,$ec,$3c,$ec,$ec,$0c
+  .BYTE $0c,$6c,$bc,$3c,$bc,$6c,$ec,$ec
+  .BYTE $3c,$ec,$ec,$2c,$ec,$1c,$1c,$1c
+  .BYTE $1c,$7c,$ec,$7c,$7c,$ec,$ec,$ec
+  .BYTE $ec,$ec,$ec,$ec,$ec,$ec,$ec,$ec
+  .BYTE $ec,$2c,$2c,$ec,$6c,$0c,$ec,$6c
+  .BYTE $6c,$bc,$ec,$7c,$ec,$bc,$ec,$0c
+  .BYTE $6c,$ec,$2c,$2c,$ec,$ec,$7c,$7c
+  .BYTE $7c,$7c,$ec,$7c,$7c,$ec,$ec,$ec
+  .BYTE $3c,$3c,$3c,$3c,$ec,$ec,$ec,$ec
+  .BYTE $ec,$2c,$2c,$2c,$0c,$0c,$0c,$6c
+  .BYTE $6c,$bc,$ec,$7c,$ec,$bc,$0c,$0c
+  .BYTE $0c,$2c,$2c,$2c,$ec,$ec,$ec,$7c
+  .BYTE $7c,$ec,$ec,$3c,$ec,$fc,$ec,$ec
+  .BYTE $3c,$3c,$3c,$3c,$3c,$3c,$ec,$ec
+  .BYTE $ec,$6c,$0c,$2c,$2c,$0c,$0c,$0c
+  .BYTE $0c,$6c,$bc,$1c,$6c,$0c,$0c,$0c
+  .BYTE $2c,$2c,$0c,$6c,$ec,$ec,$ec,$ec
+  .BYTE $fc,$ec,$ec,$3c,$ec,$ec,$ec,$ec
+  .BYTE $fc,$fc,$fc,$fc,$fc,$fc,$fc,$fc
+  .BYTE $ec,$0c,$0c,$6c,$2c,$2c,$2c,$2c
+  .BYTE $8c,$8c,$8c,$8c,$8c,$2c,$2c,$2c
+  .BYTE $2c,$2c,$6c,$6c,$ec,$ec,$ec,$3c
+  .BYTE $ec,$ec,$1c,$1c,$1c,$1c,$1c,$ec
+  .BYTE $ec,$ec,$ec,$ec,$ec,$ec,$ec,$ec
+  .BYTE $ec,$0c,$6c,$2c,$2c,$2c,$2c,$2c
+  .BYTE $8c,$8c,$8c,$8c,$8c,$2c,$2c,$2c
+  .BYTE $2c,$2c,$2c,$6c,$ec,$ec,$ec,$ec
+  .BYTE $fc,$ec,$1c,$1c,$1c,$1c,$1c,$ec
+  .BYTE $ec,$ec,$ec,$ec,$ec,$ec,$ec,$ec
+  .BYTE $ec,$0c,$6c,$2c,$2c,$2c,$8c,$2c
+  .BYTE $8c,$ac,$ac,$ac,$8c,$2c,$8c,$2c
+  .BYTE $2c,$2c,$2c,$6c,$ec,$ec,$ec,$ec
+  .BYTE $ec,$7c,$1c,$1c,$1c,$1c,$1c,$ec
+  .BYTE $4c,$4c,$ec,$ec,$ec,$ec,$ec,$ec
+  .BYTE $ec,$0c,$6c,$2c,$2c,$6c,$0c,$2c
+  .BYTE $8c,$ac,$ac,$ac,$8c,$2c,$0c,$6c
+  .BYTE $2c,$2c,$2c,$6c,$ec,$ec,$ec,$3c
+  .BYTE $ec,$7c,$7c,$7c,$7c,$ec,$ec,$ec
+  .BYTE $4c,$2c,$ec,$ec,$ec,$ec,$ec,$ec
+  .BYTE $ec,$0c,$6c,$2c,$2c,$8c,$8c,$3c
+  .BYTE $3c,$6c,$1c,$6c,$3c,$3c,$8c,$8c
+  .BYTE $2c,$2c,$2c,$6c,$ec,$ec,$ec,$3c
+  .BYTE $ec,$fc,$fc,$ec,$ec,$ec,$ec,$ec
+  .BYTE $ec,$ec,$3c,$3c,$3c,$3c,$ec,$ec
+  .BYTE $0c,$0c,$6c,$2c,$2c,$2c,$2c,$fc
+  .BYTE $fc,$0c,$6c,$0c,$fc,$fc,$2c,$2c
+  .BYTE $2c,$2c,$2c,$6c,$6c,$ec,$ec,$ec
+  .BYTE $ec,$fc,$ec,$ec,$ec,$ec,$ec,$3c
+  .BYTE $0c,$6c,$3c,$3c,$3c,$3c,$ec,$ec
+  .BYTE $ec,$0c,$6c,$6c,$6c,$6c,$6c,$fc
+  .BYTE $fc,$fc,$0c,$fc,$fc,$fc,$6c,$6c
+  .BYTE $6c,$7c,$0c,$0c,$9c,$8c,$ec,$ec
+  .BYTE $ec,$3c,$ec,$fc,$ec,$3c,$3c,$3c
+  .BYTE $0c,$6c,$3c,$3c,$3c,$3c,$ec,$ec
+  .BYTE $ec,$0c,$0c,$6c,$6c,$6c,$6c,$fc
+  .BYTE $fc,$0c,$0c,$0c,$fc,$fc,$6c,$6c
+  .BYTE $6c,$6c,$6c,$ec,$0c,$0c,$ec,$3c
+  .BYTE $3c,$1c,$3c,$ec,$ec,$fc,$fc,$fc
+  .BYTE $ec,$ec,$3c,$3c,$3c,$3c,$3c,$ec
+  .BYTE $ec,$ec,$ec,$0c,$0c,$0c,$0c,$6c
+  .BYTE $cc,$cc,$cc,$cc,$cc,$6c,$0c,$0c
+  .BYTE $0c,$0c,$6c,$ec,$0c,$0c,$ec,$0c
+  .BYTE $0c,$8c,$0c,$ec,$ec,$ec,$fc,$ec
+  .BYTE $ec,$ec,$3c,$ec,$3c,$3c,$3c,$3c
+  .BYTE $3c,$3c,$ec,$0c,$ec,$ec,$6c,$8c
+  .BYTE $0c,$6c,$6c,$6c,$0c,$8c,$6c,$ec
+  .BYTE $ec,$ec,$ec,$ec,$0c,$0c,$ec,$0c
+  .BYTE $0c,$2c,$0c,$ec,$ec,$ec,$ec,$ec
+  .BYTE $ec,$2c,$2c,$2c,$2c,$3c,$3c,$3c
+  .BYTE $3c,$3c,$ec,$ec,$ec,$ec,$6c,$8c
+  .BYTE $ec,$6c,$0c,$6c,$ec,$8c,$6c,$ec
+  .BYTE $ec,$ec,$ec,$ec,$0c,$0c,$0c,$0c
+  .BYTE $0c,$6c,$0c,$ec,$ec,$ec,$bc,$ec
+  .BYTE $ec,$6c,$6c,$6c,$ec,$ec,$3c,$3c
+  .BYTE $3c,$3c,$3c,$3c,$3c,$0c,$0c,$6c
+  .BYTE $0c,$bc,$0c,$bc,$0c,$6c,$0c,$0c
+  .BYTE $ec,$ec,$ec,$ec,$0c,$0c,$0c,$0c
+  .BYTE $0c,$0c,$0c,$ec,$4c,$4c,$4c,$4c
+  .BYTE $ec,$6c,$0c,$6c,$ec,$ec,$fc,$ec
+  .BYTE $fc,$fc,$fc,$fc,$fc,$0c,$0c,$6c
+  .BYTE $6c,$fc,$fc,$fc,$6c,$6c,$0c,$0c
+  .BYTE $ec,$ec,$ec,$2c,$ec,$ec,$7c,$1c
+  .BYTE $fc,$ec,$ec,$ec,$6c,$6c,$6c,$ec
+  .BYTE $bc,$6c,$6c,$6c,$4c,$4c,$4c,$4c
+  .BYTE $4c,$4c,$fc,$fc,$fc,$0c,$0c,$0c
+  .BYTE $0c,$bc,$0c,$bc,$0c,$0c,$0c,$0c
+  .BYTE $0c,$2c,$2c,$2c,$2c,$2c,$7c,$1c
+  .BYTE $2c,$2c,$2c,$2c,$6c,$0c,$6c,$ec
+  .BYTE $bc,$bc,$bc,$bc,$4c,$4c,$4c,$4c
+  .BYTE $4c,$4c,$ec,$fc,$fc,$0c,$0c,$0c
+  .BYTE $0c,$bc,$ec,$bc,$0c,$0c,$0c,$0c
+  .BYTE $0c,$2c,$2c,$2c,$2c,$2c,$0c,$0c
+  .BYTE $2c,$2c,$2c,$ec,$6c,$0c,$6c,$ec
+  .BYTE $6c,$6c,$6c,$6c,$6c,$6c,$6c,$6c
+  .BYTE $6c,$0c,$6c,$fc,$6c,$0c,$0c,$0c
+  .BYTE $0c,$bc,$0c,$bc,$0c,$0c,$bc,$0c
+  .BYTE $0c,$6c,$6c,$6c,$6c,$6c,$0c,$0c
+  .BYTE $6c,$6c,$6c,$bc,$bc,$bc,$bc,$ec
+  .BYTE $6c,$0c,$6c,$6c,$6c,$0c,$6c,$6c
+  .BYTE $6c,$ec,$ec,$fc,$6c,$0c,$0c,$0c
+  .BYTE $0c,$bc,$ec,$bc,$0c,$0c,$6c,$0c
+  .BYTE $0c,$6c,$6c,$0c,$6c,$6c,$0c,$0c
+  .BYTE $6c,$6c,$6c,$6c,$6c,$6c,$ec,$ec
 
 LAST                              ; End of the entire program
       
