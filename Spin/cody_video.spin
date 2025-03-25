@@ -891,12 +891,9 @@ if_nz           waitvid border, #0
                 ' Done generating NTSC video for the multicolor mode
                 jmp     #:done
                 
-:hires          ' Switch to two-color mode, 8 pixels per waitvid
-                mov     VCFG, hiivcfg
-                mov     VSCL, hivsclactv
-                
-                ' We always have 40 waitvids (320 pixels / 8 pixels per waitvid)
+:hires         ' We always have 40 waitvids (320 pixels / 8 pixels per waitvid)
                 mov     count, #40
+                mov     VSCL, vsclactvhi
                 
 :hires_loop     ' Read the next eight pixels from the scanline buffer
                 rdword  pixels, source
@@ -914,10 +911,6 @@ if_nz           waitvid border, #0
                 
                 ' Go on to the next eight pixels
                 djnz    count, #:hires_loop
-                
-                ' Switch back to four-color mode, 4 pixels per waitvid
-                mov     VCFG, ivcfg
-                mov     VSCL, vsclactv
                 
                 ' Generate the NTSC front porch before completing
 :done           call    #front_porch
@@ -944,11 +937,9 @@ vscls2cb                long    1<<12+304-269                                   
 vsclbrst                long    16<<12+16*9                                     ' NTSC 16 PLLA per cycle, 9 cycles of colorburst
 vsclbp                  long    1<<12+(527-304-16*9)+213+20                     ' NTSC back porch + overscan (213)
 vsclactv                long    16<<12+16*4                                     ' NTSC 16 PLLA per pixel, 4 pixels per frame
+vsclactvhi              long    8<<12+8*8                                       ' NTSC 8 PLLA per pixel, 8 pixels per frame
 vsclline                long    1<<12+16*4*40                                   ' NTSC line safe area
 vsclfp                  long    1<<12+214+86+20                                 ' NTSC overscan (214) + front porch
-
-hivsclactv              long    8<<12+8*8                                       ' NTSC 8 PLLA per pixel, 8 pixels per frame
-hiivcfg                 long    %0_10_0_0_1_000_00000000000_011_0_00000111      ' Hires video Configuration Register settings
 
 ' Other variables and constants
 

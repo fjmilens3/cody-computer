@@ -337,8 +337,21 @@ if_z            rdbyte  source_ptr, curr_screen_ptr
 if_z            shl     source_ptr, #3
 if_z            add     source_ptr, chrset_ptr
                 add     source_ptr, char_offset_y
-                rdbyte  pixel_data, source_ptr
-                rev     pixel_data, #24
+                rdbyte  temp, source_ptr
+                
+                mov     pixel_data, #0
+                mov     pixels_remaining, #8
+
+:pixel_loop     ' Shift out the character data bit at a time
+                shr     temp, #1                            wc
+if_c            or      pixel_data, #%01
+                
+                ' Next output bit
+                shl     pixel_data, #2
+                djnz    pixels_remaining, #:pixel_loop                        
+                
+                ' Compensate for last shift right inside the loop
+                shr     pixel_data, #2
                 
                 ' Write the pixel and color information to the buffer
                 wrword  pixel_data, dest_ptr
