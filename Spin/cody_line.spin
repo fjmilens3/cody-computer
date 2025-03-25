@@ -165,8 +165,14 @@ if_z            mov     buffer_ptr, buffer2_ptr
                 call    #decode_registers
                 
                 ' Render the scanline to the buffer
-                call    #render_chars_lo
-                call    #render_sprites
+                test    controlreg, #%00100000              wz
+if_z            call    #render_chars_lo
+                
+                test    controlreg, #%00100000              wz
+if_nz           call    #render_chars_hi
+                
+                test    controlreg, #%00100000              wz
+if_z            call    #render_sprites
                 
                 ' Go to the next line
                 add     curr_scanline, #4
