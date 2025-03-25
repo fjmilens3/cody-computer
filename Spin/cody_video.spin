@@ -904,7 +904,7 @@ if_nz           waitvid border, #0
                 
                 ' Read the colors for the 8x8 tile from the scanline buffer
                 rdword  colors, source
-                rdword  source, #2
+                add     source, #2
                 
                 ' If the display is enabled, draw the pixels from the buffer
                 ' If the display is shut off, draw the border color instead
