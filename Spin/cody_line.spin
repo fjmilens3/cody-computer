@@ -165,7 +165,7 @@ if_z            mov     buffer_ptr, buffer2_ptr
                 call    #decode_registers
                 
                 ' Render the scanline to the buffer
-                call    #render_chars
+                call    #render_chars_lo
                 call    #render_sprites
                 
                 ' Go to the next line
@@ -176,7 +176,8 @@ if_z            mov     buffer_ptr, buffer2_ptr
                 jmp     #:frame_loop
 
 '
-' Renders the characters for the current scanline. For each character the
+' Renders the characters for the current scanline for the low resolution
+' multicolor mode (160x200, 4 colors per square). For each character the
 ' value in screen memory is read, then the character data for the current
 ' line is fetched. Finally the character is blitted to the scanline buffer
 ' using the current colors. (Adjustments are made for soft-scrolling when
@@ -186,7 +187,7 @@ if_z            mov     buffer_ptr, buffer2_ptr
 ' character mode, but the screen memory is arranged as a sequence of 1000
 ' multicolor "characters" instead. The actual character memory is unused.
 '
-render_chars            
+render_chars_lo           
                 ' Set up the output pointer taking into account the left "margin" for sprites
                 mov     dest_ptr, buffer_ptr
                 add     dest_ptr, #12
@@ -269,7 +270,7 @@ if_z            add     source_ptr, chrset_ptr
                 
                 djnz    chars_remaining, #:char_loop                        
                 
-render_chars_ret    ret
+render_chars_lo_ret    ret
 
 '
 ' Renders the sprites for the current scanline. The code loops through each sprite
