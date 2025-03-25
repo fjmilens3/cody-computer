@@ -851,11 +851,15 @@ screen_area_ret ret
 '
 ' Emits a single scanline including left and right borders.
 '
-scanline
+scanline        ' Start signal with horizontal sync and NTSC back porch
                 call    #horizontal_sync
                 call    #back_porch                   
-                
-                ' By default we have 40 waitvids (160 pixels / 4 pixels per waitvid)
+               
+                ' Test hires or lowres mode based on bit in control register
+                test    control, #%00100000 wz
+if_nz           jmp     #:hires
+
+:lores          ' By default we have 40 waitvids (160 pixels / 4 pixels per waitvid)
                 mov     count, #40
                 mov     VSCL, vsclactv
                 
@@ -867,8 +871,7 @@ if_nz           sub     count, #2
                 ' Adjust pointer for offscreen scratch area in scanline buffer
                 add     source, #12
                 
-:loop           
-                ' Read the next four pixels from the scanline buffer
+:lores_loop     ' Read the next four pixels from the scanline buffer
                 rdlong  colors, source
                 
                 ' If the display is enabled, draw the pixels from the buffer
@@ -879,15 +882,47 @@ if_nz           waitvid border, #0
                 
                 ' Go on to the next four pixels
                 add     source, #4
-                djnz    count, #:loop
+                djnz    count, #:lores_loop
                 
                 ' If horizontal scrolling, draw a bigger border
                 test    control, #%00000100 wz
 if_nz           waitvid border, #0
+                
+                ' Done generating NTSC video for the multicolor mode
+                jmp     #:done
+                
+:hires          ' Switch to two-color mode, 8 pixels per waitvid
+                mov     VCFG, hiivcfg
+                mov     VSCL, hivsclactv
+                
+                ' We always have 40 waitvids (320 pixels / 8 pixels per waitvid)
+                mov     count, #40
+                
+:hires_loop     ' Read the next eight pixels from the scanline buffer
+                rdword  pixels, source
+                add     source, #2
+                
+                ' Read the colors for the 8x8 tile from the scanline buffer
+                rdword  colors, source
+                rdword  source, #2
+                
+                ' If the display is enabled, draw the pixels from the buffer
+                ' If the display is shut off, draw the border color instead
+                test    control, #%00000001 wz
+if_z            waitvid colors, pixels
+if_nz           waitvid border, #0
+                
+                ' Go on to the next eight pixels
+                djnz    count, #:hires_loop
+                
+                ' Switch back to four-color mode, 4 pixels per waitvid
+                mov     VCFG, ivcfg
+                mov     VSCL, vsclactv
+                
+                ' Generate the NTSC front porch before completing
+:done           call    #front_porch
 
-                call    #front_porch
-
-scanline_ret  ret
+scanline_ret    ret
 
 ' NTSC video configuration constants
 
@@ -911,6 +946,9 @@ vsclbp                  long    1<<12+(527-304-16*9)+213+20                     
 vsclactv                long    16<<12+16*4                                     ' NTSC 16 PLLA per pixel, 4 pixels per frame
 vsclline                long    1<<12+16*4*40                                   ' NTSC line safe area
 vsclfp                  long    1<<12+214+86+20                                 ' NTSC overscan (214) + front porch
+
+hivsclactv              long    8<<12+8*8                                       ' NTSC 8 PLLA per pixel, 8 pixels per frame
+hiivcfg                 long    %0_10_0_0_1_000_00000000000_011_0_00000111      ' Hires video Configuration Register settings
 
 ' Other variables and constants
 
