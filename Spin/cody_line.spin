@@ -334,7 +334,7 @@ if_nz           shl     screen_memory_offset, #3
                 rdword  color_data, color_data
                 add     curr_colors_ptr, #1
                 
-                ' Fetch and reverse the character bits
+                ' Fetch the character bits
                 test    controlreg, #%00010000              wz
 if_nz           mov     source_ptr, curr_screen_ptr
 if_z            rdbyte  source_ptr, curr_screen_ptr
