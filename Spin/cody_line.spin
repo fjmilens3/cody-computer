@@ -338,7 +338,7 @@ if_z            shl     source_ptr, #3
 if_z            add     source_ptr, chrset_ptr
                 add     source_ptr, char_offset_y
                 rdbyte  pixel_data, source_ptr
-                rev     pixel_data, #8
+                rev     pixel_data, #24
                 
                 ' Write the pixel and color information to the buffer
                 wrword  pixel_data, dest_ptr
