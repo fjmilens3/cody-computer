@@ -66,11 +66,11 @@
 ' Bit 2 - If set, enables horizontal scrolling (and reduces screen width by two cols)
 ' Bit 3 - If set, enables row effects.
 ' Bit 4 - If set, enables bitmap mode.
-' Bit 5 - Unused.
+' Bit 5 - If set, enables high resolution mode.
 ' Bit 6 - Unused.
 ' Bit 7 - Unused.
 ' 
-' The top nibble is reserved.
+' High resolution mode disables sprites and scrolling.
 ' 
 ' COLOR REGISTER
 ' 
