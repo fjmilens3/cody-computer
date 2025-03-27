@@ -23,7 +23,9 @@
 ' Implements a single line renderer for the Cody Computer's video subsystem. A total
 ' of four renderers (each running in their own cog) are used to generate output data
 ' for video. Each line consists of 160 visible pixels containing 40 characters and
-' up to 8 sprites from the current sprite bank.
+' up to 8 sprites from the current sprite bank. In high-resolution mode each line 
+' consists of 320 visible pixels containing 40 characters but no sprites; only two
+' colors per square are supported in this mode and the output format is different.
 ' 
 ' Refer to the video renderer for general documentation.
 ' 
@@ -165,8 +167,14 @@ if_z            mov     buffer_ptr, buffer2_ptr
                 call    #decode_registers
                 
                 ' Render the scanline to the buffer
-                call    #render_chars
-                call    #render_sprites
+                test    controlreg, #%00100000              wz
+if_z            call    #render_chars_lo
+                
+                test    controlreg, #%00100000              wz
+if_nz           call    #render_chars_hi
+                
+                test    controlreg, #%00100000              wz
+if_z            call    #render_sprites
                 
                 ' Go to the next line
                 add     curr_scanline, #4
@@ -176,7 +184,8 @@ if_z            mov     buffer_ptr, buffer2_ptr
                 jmp     #:frame_loop
 
 '
-' Renders the characters for the current scanline. For each character the
+' Renders the characters for the current scanline for the low resolution
+' multicolor mode (160x200, 4 colors per square). For each character the
 ' value in screen memory is read, then the character data for the current
 ' line is fetched. Finally the character is blitted to the scanline buffer
 ' using the current colors. (Adjustments are made for soft-scrolling when
@@ -186,7 +195,7 @@ if_z            mov     buffer_ptr, buffer2_ptr
 ' character mode, but the screen memory is arranged as a sequence of 1000
 ' multicolor "characters" instead. The actual character memory is unused.
 '
-render_chars            
+render_chars_lo           
                 ' Set up the output pointer taking into account the left "margin" for sprites
                 mov     dest_ptr, buffer_ptr
                 add     dest_ptr, #12
@@ -269,7 +278,97 @@ if_z            add     source_ptr, chrset_ptr
                 
                 djnz    chars_remaining, #:char_loop                        
                 
-render_chars_ret    ret
+render_chars_lo_ret    ret
+
+'
+' Renders the characters for the current scanline for the high resolution
+' two-color mode (320, 2 colors per 8x8 square). For each character the
+' value in screen memory is read, then the character data for the current
+' line is fetched. The characters bytes and colors are written into the
+' scanline buffer so they can be unpacked by the NTSC generator cog. In
+' order to avoid toggling the Propeller' video hardware between two and 
+' four color mode, the two colors are expanded to four colors in this step.
+' 
+' In bitmap mode the layout is slightly different. Data is read as in
+' character mode, but the screen memory is arranged as a sequence of 1000
+' multicolor "characters" instead. The actual character memory is unused.
+'
+render_chars_hi
+                ' Set up the output pointer
+                mov     dest_ptr, buffer_ptr
+                
+                ' Precalculate the current offset for each character based on the scanline
+                mov     char_offset_y, curr_scanline
+                add     char_offset_y, adjustv
+                and     char_offset_y, #%0111
+                
+                ' Determine offset in the screen and color memory based on the current row
+                mov     screen_memory_offset, curr_scanline
+                shr     screen_memory_offset, #3
+                add     screen_memory_offset, #SCREEN_OFFSET_TABLE
+                movs    :load_offset, screen_memory_offset
+                nop
+                
+:load_offset    mov     screen_memory_offset, 0_0
+                
+                ' Calculate the locations in color and screen memory using the offset above
+                mov     curr_colors_ptr, colmem_ptr
+                add     curr_colors_ptr, screen_memory_offset
+                
+                test    controlreg, #%00010000 wz
+if_z            mov     curr_screen_adv, #1
+if_nz           mov     curr_screen_adv, #8
+if_nz           shl     screen_memory_offset, #3
+                
+                mov     curr_screen_ptr, scrmem_ptr
+                add     curr_screen_ptr, screen_memory_offset
+                
+                mov     chars_remaining, #40
+                
+                ' Read the per-character colorinformation and look up the Propeller colors
+:char_loop      rdbyte  color_data, curr_colors_ptr
+                
+                shl     color_data, #1
+                add     color_data, lookup_ptr
+                
+                rdword  color_data, color_data
+                add     curr_colors_ptr, #1
+                
+                ' Fetch the character bits
+                test    controlreg, #%00010000              wz
+if_nz           mov     source_ptr, curr_screen_ptr
+if_z            rdbyte  source_ptr, curr_screen_ptr
+if_z            shl     source_ptr, #3
+if_z            add     source_ptr, chrset_ptr
+                add     source_ptr, char_offset_y
+                rdbyte  temp, source_ptr
+                
+                mov     pixel_data, #0
+                mov     pixels_remaining, #8
+
+:pixel_loop     ' Shift out the character data bit at a time
+                shr     temp, #1                            wc
+if_c            or      pixel_data, #%01
+                
+                ' Next output bit
+                shl     pixel_data, #2
+                djnz    pixels_remaining, #:pixel_loop                        
+                
+                ' Compensate for last shift right inside the loop
+                shr     pixel_data, #2
+                
+                ' Write the pixel and color information to the buffer
+                wrword  pixel_data, dest_ptr
+                add     dest_ptr, #2
+                
+                wrword  color_data, dest_ptr
+                add     dest_ptr, #2
+                
+                ' Move to the next character
+                add     curr_screen_ptr, curr_screen_adv
+                djnz    chars_remaining, #:char_loop                        
+                
+render_chars_hi_ret    ret
 
 '
 ' Renders the sprites for the current scanline. The code loops through each sprite
