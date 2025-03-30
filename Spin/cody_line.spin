@@ -325,7 +325,7 @@ if_nz           shl     screen_memory_offset, #3
                 
                 mov     chars_remaining, #40
                 
-                ' Read the per-character colorinformation and look up the Propeller colors
+                ' Read the per-character color information and look up the Propeller colors
 :char_loop      rdbyte  color_data, curr_colors_ptr
                 
                 shl     color_data, #1

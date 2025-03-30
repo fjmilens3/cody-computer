@@ -3535,7 +3535,7 @@ EXLOAD    JSR ONLYREPL        ; Only valid in REPL mode
           LDA NUMTWO          ; Read BASIC or binary file as appropriate
           BNE _BIN
           
-_BAS      JSR LOADBAS         ; Load tne BASIC program
+_BAS      JSR LOADBAS         ; Load the BASIC program
 
           STZ RUNMODE         ; Reset run mode and return
           RTS
