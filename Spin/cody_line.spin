@@ -358,11 +358,10 @@ if_c            or      pixel_data, #%01
                 shr     pixel_data, #2
                 
                 ' Write the pixel and color information to the buffer
-                wrword  pixel_data, dest_ptr
-                add     dest_ptr, #2
-                
-                wrword  color_data, dest_ptr
-                add     dest_ptr, #2
+                shl     color_data, #16
+                or      color_data, pixel_data
+                wrlong  color_data, dest_ptr
+                add     dest_ptr, #4
                 
                 ' Move to the next character
                 add     curr_screen_ptr, curr_screen_adv
