@@ -105,12 +105,11 @@ cogmain
                 add     ROWEFF_CNTL_OFFSET, memory_ptr
                 add     ROWEFF_DATA_OFFSET, memory_ptr
                 
-:frame_loop
-                ' Wait for the TOGGLE_FRAME value to begin the next frame
-                rdlong  toggle, toggle_ptr
-                cmp     toggle, TOGGLE_FRAME    wz
-if_nz           jmp     #:frame_loop
-                wrlong  TOGGLE_EMPTY, toggle_ptr
+:reset_cog      ' Start with buffer 2 (because we swap on each scanline)
+                mov     buffer_ptr, buffer2_ptr
+                
+                ' Reset the current scanline to a placeholder value
+                mov     curr_scanline, TOGGLE_RESET
                 
                 ' Read in the video registers at the start of a new frame
                 mov     video_register_ptr, VIDCTL_REGS_OFFSET
@@ -136,29 +135,20 @@ if_nz           jmp     #:frame_loop
                 rdbyte  spritereg, video_register_ptr
                 add     video_register_ptr, #1
                 
-                ' Render each line
-                mov     lines_remaining, #50
-                mov     curr_scanline, renderer_index
+                ' Decide what we need to do next
+:wait           rdlong  toggle, toggle_ptr
+                cmp     toggle, TOGGLE_RESET            wz
+if_z            jmp     #:reset_cog
+
+                ' Do we need to render a new scanline?
+                cmp     toggle, curr_scanline           wz
+if_z            jmp     #:wait
+                mov     curr_scanline, toggle
                 
-:line_loop  
-                ' Wait for a TOGGLE_LINE1 or TOGGLE_LINE2 value to begin the next line
-                rdlong  toggle, toggle_ptr
-                
-                cmp     toggle, TOGGLE_EMPTY    wz
-if_z            jmp     #:line_loop
-                
-                cmp     toggle, TOGGLE_FRAME    wz
-if_z            jmp     #:frame_loop
-                
-                ' Clear toggle value once we begin a new line                    
-                wrlong  TOGGLE_EMPTY, toggle_ptr
-                
-                ' Select the destination buffer for this scanline
-                cmp     toggle, TOGGLE_LINE1    wz
-if_z            mov     buffer_ptr, buffer1_ptr
-        
-                cmp     toggle, TOGGLE_LINE2    wz
+                ' Swap the destination buffer before each scanline
+                cmp     buffer_ptr, buffer1_ptr         wz
 if_z            mov     buffer_ptr, buffer2_ptr
+if_nz           mov     buffer_ptr, buffer1_ptr
                 
                 ' Read any row effects that may be pending for this scanline
                 call    #apply_row_effects
@@ -176,12 +166,8 @@ if_nz           call    #render_chars_hi
                 test    controlreg, #%00100000              wz
 if_z            call    #render_sprites
                 
-                ' Go to the next line
-                add     curr_scanline, #4
-                djnz    lines_remaining, #:line_loop 
-                
-                ' Begin a new frame
-                jmp     #:frame_loop
+                ' Wait for the toggle to change
+                jmp     #:wait
 
 '
 ' Renders the characters for the current scanline for the low resolution
@@ -705,9 +691,6 @@ curr_screen_ptr         long    0
 curr_colors_ptr         long    0
 curr_screen_adv         long    0
 
-TOGGLE_EMPTY            long    $0
-TOGGLE_FRAME            long    $1
-TOGGLE_LINE1            long    $2
-TOGGLE_LINE2            long    $3
+TOGGLE_RESET            long    $FFFFFFFF
 
                         fit     496

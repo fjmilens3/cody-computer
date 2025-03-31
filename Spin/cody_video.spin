@@ -510,7 +510,7 @@ PUB start(mem_ptr) | index
         mailboxes[index * 100 + 0] := index
         mailboxes[index * 100 + 1] := mem_ptr
         mailboxes[index * 100 + 2] := @COLOR_TABLE
-        mailboxes[index * 100 + 3] := 0
+        mailboxes[index * 100 + 3] := $FFFFFFFF
         
         ' Launch the corresponding cog
         line_renderer.start(@mailboxes + index * 400)
@@ -563,19 +563,28 @@ frame
                 rdword  border, border
                 
                 ' Reset scanline generators back to beginning
-                wrlong  TOGGLE_FRAME, toggle1_ptr
-                wrlong  TOGGLE_FRAME, toggle2_ptr
-                wrlong  TOGGLE_FRAME, toggle3_ptr
-                wrlong  TOGGLE_FRAME, toggle4_ptr
+                wrlong  TOGGLE_RESET, toggle1_ptr
+                wrlong  TOGGLE_RESET, toggle2_ptr
+                wrlong  TOGGLE_RESET, toggle3_ptr
+                wrlong  TOGGLE_RESET, toggle4_ptr
                 
                 ' Draw part of the screen top border
                 call    #top_border  
                 
                 ' Turn scanline generators on
-                wrlong  TOGGLE_LINE1, toggle1_ptr
-                wrlong  TOGGLE_LINE1, toggle2_ptr
-                wrlong  TOGGLE_LINE1, toggle3_ptr
-                wrlong  TOGGLE_LINE1, toggle4_ptr
+                mov     scanline_num, #0
+                
+                wrlong  scanline_num, toggle1_ptr
+                add     scanline_num, #1
+                
+                wrlong  scanline_num, toggle2_ptr
+                add     scanline_num, #1
+                
+                wrlong  scanline_num, toggle3_ptr
+                add     scanline_num, #1
+                
+                wrlong  scanline_num, toggle4_ptr
+                add     scanline_num, #1
                 
                 ' Draw the rest of the screen top border
                 call    #top_border
@@ -810,35 +819,43 @@ if_nz           call    #scroll_border
 if_nz           sub     numline, #1
 
                 ' Render scanlines behind the scenes as we generate NTSC signals
-:loop           wrlong  TOGGLE_LINE2, toggle1_ptr
+:loop           wrlong  scanline_num, toggle1_ptr
+                add     scanline_num, #1
                 mov     source, buffer1_ptr
                 call    #scanline
 
-                wrlong  TOGGLE_LINE2, toggle2_ptr
+                wrlong  scanline_num, toggle2_ptr
+                add     scanline_num, #1
                 mov     source, buffer2_ptr
                 call    #scanline
 
-                wrlong  TOGGLE_LINE2, toggle3_ptr                        
+                wrlong  scanline_num, toggle3_ptr
+                add     scanline_num, #1
                 mov     source, buffer3_ptr
                 call    #scanline
 
-                wrlong  TOGGLE_LINE2, toggle4_ptr
+                wrlong  scanline_num, toggle4_ptr
+                add     scanline_num, #1
                 mov     source, buffer4_ptr
                 call    #scanline
 
-                wrlong  TOGGLE_LINE1, toggle1_ptr
+                wrlong  scanline_num, toggle1_ptr
+                add     scanline_num, #1
                 mov     source, buffer5_ptr
                 call    #scanline
 
-                wrlong  TOGGLE_LINE1, toggle2_ptr                        
+                wrlong  scanline_num, toggle2_ptr
+                add     scanline_num, #1
                 mov     source, buffer6_ptr
                 call    #scanline
 
-                wrlong  TOGGLE_LINE1, toggle3_ptr                        
+                wrlong  scanline_num, toggle3_ptr
+                add     scanline_num, #1
                 mov     source, buffer7_ptr
                 call    #scanline
 
-                wrlong  TOGGLE_LINE1, toggle4_ptr                        
+                wrlong  scanline_num, toggle4_ptr
+                add     scanline_num, #1
                 mov     source, buffer8_ptr
                 call    #scanline
                 
@@ -978,10 +995,9 @@ buffer6_ptr             long    $D0
 buffer7_ptr             long    $D0
 buffer8_ptr             long    $D0
 
-TOGGLE_EMPTY            long    $0                  ' Toggle constants for communicating with scanline renderers
-TOGGLE_FRAME            long    $1
-TOGGLE_LINE1            long    $2
-TOGGLE_LINE2            long    $3
+scanline_num            long    0                   ' The scanline to render for a particular rendering cog
+
+TOGGLE_RESET            long    $FFFFFFFF           ' Magic number to reset a scanline renderer
 
 VBLANK_REG_OFFSET       long    $3000               ' Special simulated register locations in shared memory
 CONTROL_REG_OFFSET      long    $3001
