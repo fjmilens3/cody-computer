@@ -285,7 +285,6 @@ render_chars_hi
                 
                 ' Precalculate the current offset for each character based on the scanline
                 mov     char_offset_y, curr_scanline
-                add     char_offset_y, adjustv
                 and     char_offset_y, #%0111
                 
                 ' Determine offset in the screen and color memory based on the current row
