@@ -897,7 +897,7 @@ if_nz           sub     count, #2
                 ' If the display is enabled, draw the pixels from the buffer
                 ' If the display is shut off, draw the border color instead
                 test    control, #%00000001 wz
-if_z            waitvid colors, pixels
+if_z            waitvid colors, lores_pixels
 if_nz           waitvid border, #0
                 
                 ' Go on to the next four pixels
@@ -916,7 +916,7 @@ if_nz           waitvid border, #0
                 mov     VSCL, vsclactvhi
                 
 :hires_loop     ' Read the next eight pixels from the scanline buffer
-                rdword  pixels, source
+                rdword  hires_pixels, source
                 add     source, #2
                 
                 ' Read the colors for the 8x8 tile from the scanline buffer
@@ -926,7 +926,7 @@ if_nz           waitvid border, #0
                 ' If the display is enabled, draw the pixels from the buffer
                 ' If the display is shut off, draw the border color instead
                 test    control, #%00000001 wz
-if_z            waitvid colors, pixels
+if_z            waitvid colors, hires_pixels
 if_nz           waitvid border, #0
                 
                 ' Go on to the next eight pixels
@@ -967,7 +967,8 @@ numline                 long    $0                  ' Number of lines to emit (u
 count                   long    $0                  ' General-purpose counting value (used in certain loops)
 temp                    long    $0                  ' General-purpose temporary value
 
-pixels                  long    %%3210              ' Pixel pattern for four-color WAITVID operations
+lores_pixels            long    %%3210              ' Pixel pattern for low-resolution four-color WAITVIDs
+hires_pixels            long    %0                  ' Pixel pattern for high-resolution four-color WAITVIDs
 colors                  long    $0                  ' Current colors (pixels) to display on a scanline 
 border                  long    $0                  ' Current border color to use on borders/blanked screen
 control                 long    $0                  ' Current control register value
