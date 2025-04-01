@@ -136,6 +136,11 @@ if_nz           jmp     #:frame_loop
                 rdbyte  spritereg, video_register_ptr
                 add     video_register_ptr, #1
                 
+                ' Reset row effects at the beginning of each frame
+                mov     roweff_remaining, #32
+                mov     roweff_cntl_ptr, ROWEFF_CNTL_OFFSET
+                mov     roweff_data_ptr, ROWEFF_DATA_OFFSET
+                
                 ' Render each line
                 mov     lines_remaining, #50
                 mov     curr_scanline, renderer_index
@@ -527,7 +532,9 @@ decode_registers_ret  ret
 ' Applies the row effects (a simplified version of a raster interrupt) for the
 ' current scanline. Each row effect control byte and data byte are read and
 ' compared to the current scanline's row for applicability. If the row effect
-' should be applied the appropriate register is updated.
+' should be applied the appropriate register is updated. The location in the
+' tables is preserved across calls to avoid rereading the entire table on each
+' scanline.
 '
 apply_row_effects
 
@@ -539,15 +546,12 @@ if_z            jmp     #apply_row_effects_ret
                 mov     roweff_row, curr_scanline
                 shr     roweff_row, #3
                 
-                ' Start at the beginning of each bank of registers
-                mov     roweff_cntl_ptr, ROWEFF_CNTL_OFFSET
-                mov     roweff_data_ptr, ROWEFF_DATA_OFFSET
+                ' Check if we have more row effects to look at
+:loop           djnz    roweff_remaining, #:cont 
+                jmp     #apply_row_effects_ret
                 
-                ' Begin the row effects loop
-                mov     roweff_remaining, #32
-                
-                ' Read the control and data bytes
-:loop           rdbyte  roweff_cntl_byte, roweff_cntl_ptr
+                ' Read the control/data bytes and extract the row number
+:cont           rdbyte  roweff_cntl_byte, roweff_cntl_ptr
                 
                 mov     temp, roweff_cntl_byte
                 and     temp, #%00011111
@@ -555,8 +559,8 @@ if_z            jmp     #apply_row_effects_ret
                 rdbyte  roweff_data_byte, roweff_data_ptr
                 
                 ' Test that this line is applicable for this row
-                cmp     temp, roweff_row                wz
-if_nz           jmp     #:next
+                cmp     temp, roweff_row                wz, wc
+if_nz_and_nc    jmp     #apply_row_effects_ret
                 
                 ' Apply the replacement for the selected register
                 mov     temp, roweff_cntl_byte
@@ -574,10 +578,12 @@ if_z            mov     screenreg, roweff_data_byte
                 cmp     temp, #%11100000                wz
 if_z            mov     spritereg, roweff_data_byte
                 
-:next           add     roweff_cntl_ptr, #1
+                ' Advance over this entry for the next check
+                add     roweff_cntl_ptr, #1
                 add     roweff_data_ptr, #1
                 
-                djnz    roweff_remaining, #:loop
+                ' Next row effect
+                jmp     #:loop
                 
 apply_row_effects_ret   ret
 
