@@ -547,9 +547,9 @@ if_z            jmp     #apply_row_effects_ret
                 shr     roweff_row, #3
                 
                 ' Check if we have more row effects to look at
-:loop           djnz    roweff_remaining, #:cont 
-                jmp     #apply_row_effects_ret
-                
+:loop           cmp     roweff_remaining, #0            wz
+if_z            jmp     #apply_row_effects_ret
+               
                 ' Read the control/data bytes and extract the row number
 :cont           rdbyte  roweff_cntl_byte, roweff_cntl_ptr
                 
@@ -578,9 +578,10 @@ if_z            mov     screenreg, roweff_data_byte
                 cmp     temp, #%11100000                wz
 if_z            mov     spritereg, roweff_data_byte
                 
-                ' Advance over this entry for the next check
+                ' Move on to the next entry
                 add     roweff_cntl_ptr, #1
                 add     roweff_data_ptr, #1
+                sub     roweff_remaining, #1
                 
                 ' Next row effect
                 jmp     #:loop
