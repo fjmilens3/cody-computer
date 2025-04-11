@@ -20,7 +20,7 @@ cody_computer.binary: cody_computer.spin $(CODY_COMPUTER_DEPS)
 
 .PHONY: upload
 upload: cody_computer.binary
-	$(PROPLOADER) -s $<
+	$(PROPLOADER) -e -s $<
 
 .PHONY: clean
 clean:
