@@ -4,7 +4,7 @@ Item,Count,Mouser P/N
 "Capacitor, 10µF, electrolytic (KEMET ESL106M050AC3AA)",1,80-ESL106M050AC3AA
 "Capacitor, 1000µF, electrolytic (Rubycon 10ZLH1000MEFC8X16)",1,232-10ZLH1000MEFC8X1
 "Connector, DC barrel jack, 2.0x6.5mm (CUI PJ-102A)",1,490-PJ-102A
-"Connector, DB9, male, .318"" footprint (NorComp 182-009-113R531)",1,636-182-009-113R531
+"Connector, DB9, male, .318"" footprint (NorComp 182-009-113R531)",2,636-182-009-113R531
 "Connector, RCA jack, black (CUI RCJ-011)",1,490-RCJ-011
 "Connector, RCA jack, yellow (CUI RCJ-014)",1,490-RCJ-014
 "Crystal, 5Mhz 20pF, HC-49/US (ECS ECS-50-20-4X)",1,520-HCU500-20X
