@@ -1,0 +1,46 @@
+Item,Count,Mouser P/N
+,,
+"Capacitor, 0.1µF, ceramic (KEMET C315C104K1R5TA)",9,80-C315C104K1R
+"Capacitor, 10µF, electrolytic (KEMET ESL106M050AC3AA)",1,80-ESL106M050AC3AA
+"Capacitor, 1000µF, electrolytic (Rubycon 10ZLH1000MEFC8X16)",1,232-10ZLH1000MEFC8X1
+"Connector, DC barrel jack, 2.0x6.5mm (CUI PJ-102A)",1,490-PJ-102A
+"Connector, DB9, male, .318"" footprint (NorComp 182-009-113R531)",2,636-182-009-113R531
+"Connector, RCA jack, black (CUI RCJ-011)",1,490-RCJ-011
+"Connector, RCA jack, yellow (CUI RCJ-014)",1,490-RCJ-014
+"Crystal, 5Mhz 20pF, HC-49/US (ECS ECS-50-20-4X)",1,520-HCU500-20X
+"DIP socket, 40-pin wide",3,571-1-2199299-5
+"DIP socket, 32-pin wide",1,571-1-2199300-2
+"DIP socket, 20-pin",1,571-1-2199298-6
+"DIP socket, 16-pin",1,571-1-2199298-4
+"DIP socket, 8-pin",1,571-1-2199298-2
+"Diode, small-signal, 1N4148",10,512-1N4148
+"Header, female .100"", 20-pin right-angle (can use Raspberry Pi Pico/ESP32 stackable headers and bend)",1,474-PRT-14311
+"Header, male .100"", right angle (~ 40-pin breakaway)",1,474-PRT-00553
+"Header, male .100"", straight (~ 40-pin breakaway)",1,474-PRT-00116
+"IC, LM2937ET-3.3 voltage regulator",1,926-LM2937ET-3.3NOPB
+"IC, P8X32A Propeller 1, DIP-40",1,619-P8X32A-D40
+"IC, 24LC256 I2C EEPROM 32-kilobyte, DIP-8",1,579-24LC256-I/P
+"IC, 74HC541 octal line driver, DIP-20",1,595-CD74HC541E
+"IC, W65C02 microprocessor, DIP-40",1,955-W65C02S6TPG-14
+"IC, AS6C1008 static RAM 128-kilobyte, DIP-32",1,913-AS6C1008-55PCN
+"IC, W65C22 Versatile Interface Adapter, DIP-40",1,955-W65C22S6TPG-14
+"IC, CD4051 1-of-8 analog multiplexer, DIP-16",1,595-CD4051BE
+"Jumper/shunt, 2-pin (Harwin M7583-46)",1,855-M7583-46
+"Jumper wires (""jerky""), 10cm with .100"" female connector",1,854-ZW-FF-10
+"LED, 10mm, blue, through-hole",1,474-COM-10635
+"Programmer, ""Prop Plug"" (Propeller-compatible FTDI device)",1,619-32201
+"Resistor, 1kΩ, 1/4 watt, 5% tolerance",1,603-CFR-25JR-521K
+"Resistor, 3.3kΩ, 1/4 watt, 5% tolerance",1,603-CFR-25JR-523K3
+"Resistor, 10kΩ,1/4 watt, 5% tolerance",8,603-CFR-25JB-52-10K
+"Resistor, 220Ω, 1/4 watt, 1% tolerance",1,603-MFR-25FBF52-220R
+"Resistor, 270Ω, 1/4 watt, 1% tolerance",1,603-MFR-25FBF52-270R
+"Resistor, 560Ω, 1/4 watt, 1% tolerance",1,603-MFR-25FTF52-560R
+"Resistor, 1.1kΩ, 1/4 watt, 1% tolerance",1,603-MFR-25FTE52-1K1
+"Switch, Cherry MX keyboard, 5 pin, PCB mount",31,540-MX1A-E1NW
+,,
+"OPTIONAL (CARTRIDGE/PROGRAMMER): Capacitor, 0.1µF, ceramic (KEMET C315C104K1R5TA)",1,80-C315C104K1R
+"OPTIONAL (CARTRIDGE/PROGRAMMER): DIP socket, 8-pin",1,571-1-2199298-2
+"OPTIONAL (CARTRIDGE/PROGRAMMER): Header, male .100"", right angle (~ 40-pin breakaway)",1,474-PRT-00553
+"OPTIONAL (CARTRIDGE/PROGRAMMER): Header, male .100"", straight (~ 40-pin breakaway)",1,474-PRT-00116
+"OPTIONAL (CARTRIDGE/PROGRAMMER): IC, 25LC1024 SPI EEPROM 128-kilobyte, DIP-8",1,579-25LC1024-E/P
+"OPTIONAL (CARTRIDGE/PROGRAMMER): Jumper/shunt, 2-pin (Harwin M7583-46)",3,855-M7583-46
