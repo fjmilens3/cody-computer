@@ -1,4 +1,9 @@
+# If the Parallax tools are not in the PATH,
+# set the following environment variables to the complete paths to the respective tool executables.
+
+# Parallax OpenSpin: https://github.com/parallaxinc/OpenSpin
 OPENSPIN ?= openspin
+# Parallax PropLoader: https://github.com/parallaxinc/PropLoader
 PROPLOADER ?= proploader
 
 CODY_COMPUTER_DEPS = \
@@ -11,6 +16,9 @@ CODY_COMPUTER_DEPS = \
 .PHONY: all
 all: cody_computer.binary
 
+# Rebuild/re-copy the Cody BASIC ROM image if necessary.
+# Normally the codybasic.bin committed into the Git repo is always up-to-date,
+# but it may need updating if there are local changes to codybasic.asm.
 codybasic.bin: ../Tass/codybasic.asm
 	$(MAKE) -C ../Tass $@
 	cp ../Tass/$@ $@
@@ -22,6 +30,7 @@ cody_computer.binary: cody_computer.spin $(CODY_COMPUTER_DEPS)
 upload: cody_computer.binary
 	$(PROPLOADER) -e -s $<
 
+# Not deleting codybasic.bin, because it is committed into Git.
 .PHONY: clean
 clean:
 	$(RM) *.binary
