@@ -155,6 +155,7 @@ DATAPTR   = $48       ; Pointer to the next line for DATA statements (2 bytes)
 DBUFPOS   = $4A       ; Index in the data buffer for READ statements
 PROGEND   = $4B       ; Boundary page for program memory (can be updated/overridden)
 
+TOKENIZEC = $4D       ; Tokenizer character (used internally during tokenizing lines)
 TOKENIZEL = $4E       ; Tokenizer binary search L and R values for tokens
 TOKENIZER = $4F
 
@@ -2779,16 +2780,16 @@ _TOKCHAR  LDA (MEMDPTR),Y     ; Get the destination char and test the high bit f
           PHP
           
           AND #$7F            ; Mask out the valid portion of the char for later comparision
-          STA SYS_A
-          
+          STA TOKENIZEC
+
           LDA (MEMSPTR),Y     ; Get the next character from the input string and UPPERCASE it
           JSR TOUPPER
           
-          CMP SYS_A           ; Compare it to the token string and see if we still match
+          CMP TOKENIZEC       ; Compare it to the token string and see if we still match
           BEQ _TOKOK
           BCC _TOKLO
           BCS _TOKHI
-        
+
 _TOKOK    INY                 ; Move to next char
 
           PLP                 ; If we've reached the end of the token we're testing against, we have a match
