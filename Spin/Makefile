@@ -26,9 +26,13 @@ codybasic.bin: ../Tass/codybasic.asm
 cody_computer.binary: cody_computer.spin $(CODY_COMPUTER_DEPS)
 	$(OPENSPIN) -o $@ $<
 
+ifneq ($(PORT),)
+    PROPLOADER_FLAGS += -p "$(PORT)"
+endif
+
 .PHONY: upload
 upload: cody_computer.binary
-	$(PROPLOADER) -e -r -s $<
+	$(PROPLOADER) $(PROPLOADER_FLAGS) -e -r -s $<
 
 # Not deleting codybasic.bin, because it is committed into Git.
 .PHONY: clean
