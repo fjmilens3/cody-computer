@@ -2744,13 +2744,16 @@ _TOK      PHX                 ; Preserve our registers before beginning the toke
           LDA #(_TOKTABLEEND - _TOKTABLE)
           STA TOKENIZER
           
-_TOKNEXT  LDA TOKENIZEL       ; Are we done yet? (L <= R)
+_TOKNEXT  LDA TOKENIZER       ; Are we done yet? (top value wrapped around)
+          BMI _TOKNONE
+
+          LDA TOKENIZEL       ; Are we done yet? (L <= R)
           CMP TOKENIZER
 
           BCC _TOKCOMP
           BEQ _TOKCOMP
           
-          PLY                 ; Restore token buffer (Y) and input buffer (X) positions
+_TOKNONE  PLY                 ; Restore token buffer (Y) and input buffer (X) positions
           PLX
           
           JMP _CHR            ; Process as normal character
