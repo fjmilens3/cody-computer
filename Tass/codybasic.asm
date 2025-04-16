@@ -7100,6 +7100,45 @@ _READSER  JSR SERIALGET       ; Busy-wait for another byte
           BCC _READSER
           RTS
 
+;
+; PUTHEX
+;
+; Debug code that prints a hex code to the screen.
+;
+; TODO: REMOVE BEFORE RELEASE.
+;
+.comment
+PUTHEX
+  PHA
+  PHX
+  TAX
+  JSR HEXTOASCII
+  PHA
+  TXA
+  LSR A
+  LSR A
+  LSR A
+  LSR A
+  JSR HEXTOASCII
+  PHA
+  PLA
+  JSR SCREENPUT
+  PLA
+  JSR SCREENPUT
+  PLX
+  PLA
+  RTS
+HEXTOASCII
+  AND #$F
+  CLC
+  ADC #48
+  CMP #58
+  BCC HEXTOASCII1
+  ADC #6
+HEXTOASCII1
+  RTS
+.endcomment
+
 ; Low-byte pointer table for messages/tokens (order is important!)
 ; See below for high bytes
 
@@ -7190,45 +7229,6 @@ STR_LOGIC
   .SHIFT "LOGIC"
 STR_SYSTEM
   .SHIFT "SYSTEM"
-  
-;
-; PUTHEX
-;
-; Debug code that prints a hex code to the screen.
-;
-; TODO: REMOVE BEFORE RELEASE.
-;
-.comment
-PUTHEX
-  PHA
-  PHX
-  TAX
-  JSR HEXTOASCII
-  PHA
-  TXA
-  LSR A
-  LSR A
-  LSR A
-  LSR A
-  JSR HEXTOASCII
-  PHA
-  PLA
-  JSR SCREENPUT
-  PLA
-  JSR SCREENPUT
-  PLX
-  PLA
-  RTS
-HEXTOASCII
-  AND #$F
-  CLC
-  ADC #48
-  CMP #58
-  BCC HEXTOASCII1
-  ADC #6
-HEXTOASCII1
-  RTS
-.endcomment
 
 * = $FFFC               ; 6502 start address
 
