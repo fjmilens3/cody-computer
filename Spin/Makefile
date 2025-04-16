@@ -28,7 +28,7 @@ cody_computer.binary: cody_computer.spin $(CODY_COMPUTER_DEPS)
 
 .PHONY: upload
 upload: cody_computer.binary
-	$(PROPLOADER) -e -s $<
+	$(PROPLOADER) -e -r -s $<
 
 # Not deleting codybasic.bin, because it is committed into Git.
 .PHONY: clean
