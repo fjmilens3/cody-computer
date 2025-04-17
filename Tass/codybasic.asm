@@ -2744,13 +2744,16 @@ _TOK      PHX                 ; Preserve our registers before beginning the toke
           LDA #(_TOKTABLEEND - _TOKTABLE)
           STA TOKENIZER
           
-_TOKNEXT  LDA TOKENIZEL       ; Are we done yet? (L <= R)
+_TOKNEXT  LDA TOKENIZER       ; Are we done yet? (top value wrapped around)
+          BMI _TOKNONE
+
+          LDA TOKENIZEL       ; Are we done yet? (L <= R)
           CMP TOKENIZER
 
           BCC _TOKCOMP
           BEQ _TOKCOMP
           
-          PLY                 ; Restore token buffer (Y) and input buffer (X) positions
+_TOKNONE  PLY                 ; Restore token buffer (Y) and input buffer (X) positions
           PLX
           
           JMP _CHR            ; Process as normal character
@@ -2816,6 +2819,8 @@ _TOKYES   STY MEMSPTR         ; Shove the token's length somewhere we already cl
           
           ORA #$80            ; Set high bit in byte to mark it as a token
           
+          TAX                 ; Preserve the token value for later
+          
           PLY                 ; Restore the token buffer offset into the Y register
           
           JSR _PUT            ; Put the token into the token buffer
@@ -2825,7 +2830,7 @@ _TOKYES   STY MEMSPTR         ; Shove the token's length somewhere we already cl
           CLC                 ; Adjust by the token's length
           ADC MEMSPTR
           
-          PHX                 ; Temporarily store the token value in X
+          PHX                 ; Use the stack as temporary storage for the token value
           
           TAX                 ; Restore the input buffer offset into the X register
           
@@ -7097,6 +7102,45 @@ _READSER  JSR SERIALGET       ; Busy-wait for another byte
           BCC _READSER
           RTS
 
+;
+; PUTHEX
+;
+; Debug code that prints a hex code to the screen.
+;
+; TODO: REMOVE BEFORE RELEASE.
+;
+.comment
+PUTHEX
+  PHA
+  PHX
+  TAX
+  JSR HEXTOASCII
+  PHA
+  TXA
+  LSR A
+  LSR A
+  LSR A
+  LSR A
+  JSR HEXTOASCII
+  PHA
+  PLA
+  JSR SCREENPUT
+  PLA
+  JSR SCREENPUT
+  PLX
+  PLA
+  RTS
+HEXTOASCII
+  AND #$F
+  CLC
+  ADC #48
+  CMP #58
+  BCC HEXTOASCII1
+  ADC #6
+HEXTOASCII1
+  RTS
+.endcomment
+
 ; Low-byte pointer table for messages/tokens (order is important!)
 ; See below for high bytes
 
@@ -7187,45 +7231,6 @@ STR_LOGIC
   .SHIFT "LOGIC"
 STR_SYSTEM
   .SHIFT "SYSTEM"
-  
-;
-; PUTHEX
-;
-; Debug code that prints a hex code to the screen.
-;
-; TODO: REMOVE BEFORE RELEASE.
-;
-.comment
-PUTHEX
-  PHA
-  PHX
-  TAX
-  JSR HEXTOASCII
-  PHA
-  TXA
-  LSR A
-  LSR A
-  LSR A
-  LSR A
-  JSR HEXTOASCII
-  PHA
-  PLA
-  JSR SCREENPUT
-  PLA
-  JSR SCREENPUT
-  PLX
-  PLA
-  RTS
-HEXTOASCII
-  AND #$F
-  CLC
-  ADC #48
-  CMP #58
-  BCC HEXTOASCII1
-  ADC #6
-HEXTOASCII1
-  RTS
-.endcomment
 
 * = $FFFC               ; 6502 start address
 
