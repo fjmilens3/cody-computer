@@ -2819,6 +2819,8 @@ _TOKYES   STY MEMSPTR         ; Shove the token's length somewhere we already cl
           
           ORA #$80            ; Set high bit in byte to mark it as a token
           
+          TAX                 ; Preserve the token value for later
+          
           PLY                 ; Restore the token buffer offset into the Y register
           
           JSR _PUT            ; Put the token into the token buffer
@@ -2828,7 +2830,7 @@ _TOKYES   STY MEMSPTR         ; Shove the token's length somewhere we already cl
           CLC                 ; Adjust by the token's length
           ADC MEMSPTR
           
-          PHX                 ; Temporarily store the token value in X
+          PHX                 ; Use the stack as temporary storage for the token value
           
           TAX                 ; Restore the input buffer offset into the X register
           
