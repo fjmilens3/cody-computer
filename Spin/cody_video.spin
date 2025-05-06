@@ -70,7 +70,7 @@
 ' Bit 3 - If set, enables row effects.
 ' Bit 4 - If set, enables bitmap mode.
 ' Bit 5 - If set, enables high resolution mode.
-' Bit 6 - Unused.
+' Bit 6 - If set, enables black-and-white mode (disables color output).
 ' Bit 7 - Unused.
 ' 
 ' High resolution mode disables sprites and scrolling.
@@ -562,6 +562,10 @@ frame
                 add     border, lookup_ptr
                 rdword  border, border
                 
+                ' If color is turned off, mask out border color to luminance only
+                test    control, #%01000000     wz
+if_nz           and     border, bw_mask
+                
                 ' Reset scanline generators back to beginning
                 wrlong  TOGGLE_FRAME, toggle1_ptr
                 wrlong  TOGGLE_FRAME, toggle2_ptr
@@ -710,13 +714,15 @@ horizontal_sync
                 mov     VSCL, vsclsync
                 waitvid sync, #0
 
-                ' Generate 5.3 microseconds blank before colorbust
+                ' Generate 5.3 microseconds blank before colorburst
                 mov     VSCL, vscls2cb
                 waitvid sync, blank
                 
-                ' Generate 9 cycles of NTSC colorburst
-                mov     VSCL, vsclbrst      ' 9 cycles of colorburst
-                waitvid sync, burst
+                ' Generate 9 cycles of NTSC colorburst (or blank if color turned off)
+                mov     VSCL, vsclbrst
+                test    control, #%01000000     wz
+if_z            waitvid sync, burst
+if_nz           waitvid sync, blank
 
 horizontal_sync_ret   ret
 
@@ -877,6 +883,10 @@ if_nz           sub     count, #2
 :lores_loop     ' Read the next four pixels from the scanline buffer
                 rdlong  colors, source
                 
+                ' If colors are turned off, mask out color values (keep luminance only)
+                test    control, #%01000000     wz
+if_nz           and     colors, bw_mask
+                
                 ' If the display is enabled, draw the pixels from the buffer
                 ' If the display is shut off, draw the border color instead
                 test    control, #%00000001 wz
@@ -894,7 +904,7 @@ if_nz           waitvid border, #0
                 ' Done generating NTSC video for the multicolor mode
                 jmp     #:done
                 
-:hires         ' We always have 40 waitvids (320 pixels / 8 pixels per waitvid)
+:hires          ' We always have 40 waitvids (320 pixels / 8 pixels per waitvid)
                 mov     count, #40
                 mov     VSCL, vsclactvhi
                 
@@ -905,6 +915,10 @@ if_nz           waitvid border, #0
                 ' Read the colors for the 8x8 tile from the scanline buffer
                 rdword  colors, source
                 add     source, #2
+                
+                ' If colors are turned off, mask out color values (keep luminance only)
+                test    control, #%01000000     wz
+if_nz           and     colors, bw_mask
                 
                 ' If the display is enabled, draw the pixels from the buffer
                 ' If the display is shut off, draw the border color instead
@@ -950,6 +964,7 @@ numline                 long    $0                  ' Number of lines to emit (u
 count                   long    $0                  ' General-purpose counting value (used in certain loops)
 temp                    long    $0                  ' General-purpose temporary value
 
+bw_mask                 long    $07070707           ' Mask for black-and-white video (suppress color component)
 lores_pixels            long    %%3210              ' Pixel pattern for low-resolution four-color WAITVIDs
 hires_pixels            long    %0                  ' Pixel pattern for high-resolution four-color WAITVIDs
 colors                  long    $0                  ' Current colors (pixels) to display on a scanline 
