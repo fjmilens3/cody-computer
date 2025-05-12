@@ -160,7 +160,7 @@ LOOP        LDA PLAYERX         ; Calculate coarse scroll position
             CMP #21
             BCC _TOOLO
             
-            CMP #46
+            CMP #47
             BCS _TOOHI
             
             SEC
@@ -172,7 +172,7 @@ LOOP        LDA PLAYERX         ; Calculate coarse scroll position
 _TOOLO      STZ CORNERX
             BRA _DRAW
             
-_TOOHI      LDA #25
+_TOOHI      LDA #26
             STA CORNERX
             BRA _DRAW
             
@@ -358,10 +358,10 @@ DRAWSCRN    LDA #<MAPDATA       ; Start map pointer at beginning of map
             LDA PLAYERX         ; Update fine scroll position if needed
             
             CMP #(4*21)
-            BCC _DONE
+            BCC _NO_SCROLL
             
-            CMP #(4*46)
-            BCS _DONE
+            CMP #(4*47)
+            BCS _NO_SCROLL
             
             AND #$03
             ASL A
@@ -371,6 +371,9 @@ DRAWSCRN    LDA #<MAPDATA       ; Start map pointer at beginning of map
             STA VID_SCRL
             
 _DONE       RTS                 ; All done
+            
+_NO_SCROLL  STZ VID_SCRL
+            RTS                 ; All done
 
 ;
 ; COPYROWS
