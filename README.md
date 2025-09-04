@@ -13,6 +13,7 @@ Each subdirectory contains a portion of the design:
 - `STL` contains the generated STL files suitable for slicing and printing.
 - `Tass` contains the `64tass` assembly files for Cody BASIC and demo programs.
 - `CodyBASIC` contains some sample Cody BASIC programs used for demo purposes.
+- `BillOfMaterials` contains spreadsheets with possible options for sourcing parts.
 
 All design files and sources are released under the GPL version 3. A mention
 of the Cody Computer in any derived works is also appreciated.
@@ -23,6 +24,3 @@ but may be freely distributed. Visit
 
 If any technical issues or inaccuracies are found in any of the material,
 please reach out to the author or raise an issue on GitHub.
-
-Frederick John Milens III \
-December 2024
