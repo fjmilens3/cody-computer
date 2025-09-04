@@ -6,8 +6,8 @@
 
   (title_block
     (title "Cody Computer Main Sheet")
-    (date "2023-04-18")
-    (rev "A")
+    (date "2025-01-06")
+    (rev "B")
   )
 
   (lib_symbols
@@ -280,6 +280,9 @@
     (path "/00000000-0000-0000-0000-00006075e891/0c40db6b-8279-474b-9fd0-3b2a5e04b453"
       (reference "J9") (unit 1) (value "Joystick 2") (footprint "Connector_Dsub:DSUB-9_Male_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm")
     )
+    (path "/00000000-0000-0000-0000-000060629470/b34b92c3-3ac4-4d04-b7eb-a34b83a35a69"
+      (reference "J10") (unit 1) (value "Debug Power (Do Not Populate)") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical")
+    )
     (path "/00000000-0000-0000-0000-000060629470/ff795313-a3f5-49aa-b0d9-89edc816f9c3"
       (reference "JP1") (unit 1) (value "Developer Mode Enable") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical")
     )
@@ -326,28 +329,28 @@
       (reference "R14") (unit 1) (value "10K") (footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical")
     )
     (path "/00000000-0000-0000-0000-000060629470/00000000-0000-0000-0000-00006064a1d6"
-      (reference "U1") (unit 1) (value "74HC541") (footprint "Package_DIP:DIP-20_W7.62mm_Socket")
+      (reference "U1") (unit 1) (value "74HC541") (footprint "Package_DIP:DIP-20_W7.62mm_Socket_LongPads")
     )
     (path "/00000000-0000-0000-0000-000060629470/9182a54e-fedf-41e9-86cf-a5708078a37f"
       (reference "U2") (unit 1) (value "LM2937ET-3.3") (footprint "Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown")
     )
     (path "/00000000-0000-0000-0000-000060629470/00000000-0000-0000-0000-00006064a1d0"
-      (reference "U3") (unit 1) (value "P8X32A-D40") (footprint "Package_DIP:DIP-40_W15.24mm_Socket")
+      (reference "U3") (unit 1) (value "P8X32A-D40") (footprint "Package_DIP:DIP-40_W15.24mm_Socket_LongPads")
     )
     (path "/00000000-0000-0000-0000-000060629470/00000000-0000-0000-0000-00006064a27b"
-      (reference "U4") (unit 1) (value "24LC256") (footprint "Package_DIP:DIP-8_W7.62mm_Socket")
+      (reference "U4") (unit 1) (value "24LC256") (footprint "Package_DIP:DIP-8_W7.62mm_Socket_LongPads")
     )
     (path "/00000000-0000-0000-0000-00006068e1db/00000000-0000-0000-0000-00006028bb66"
-      (reference "U5") (unit 1) (value "W65C02SxP") (footprint "Package_DIP:DIP-40_W15.24mm_Socket")
+      (reference "U5") (unit 1) (value "W65C02SxP") (footprint "Package_DIP:DIP-40_W15.24mm_Socket_LongPads")
     )
     (path "/00000000-0000-0000-0000-00006068e1db/00000000-0000-0000-0000-00006068e659"
-      (reference "U6") (unit 1) (value "AS6C1008") (footprint "Package_DIP:DIP-32_W15.24mm_Socket")
+      (reference "U6") (unit 1) (value "AS6C1008") (footprint "Package_DIP:DIP-32_W15.24mm_Socket_LongPads")
     )
     (path "/00000000-0000-0000-0000-00006075e891/00000000-0000-0000-0000-00006028b0c5"
-      (reference "U7") (unit 1) (value "W65C22SxP") (footprint "Package_DIP:DIP-40_W15.24mm_Socket")
+      (reference "U7") (unit 1) (value "W65C22SxP") (footprint "Package_DIP:DIP-40_W15.24mm_Socket_LongPads")
     )
     (path "/00000000-0000-0000-0000-00006075e891/00000000-0000-0000-0000-00006076a372"
-      (reference "U8") (unit 1) (value "4051") (footprint "Package_DIP:DIP-16_W7.62mm_Socket")
+      (reference "U8") (unit 1) (value "4051") (footprint "Package_DIP:DIP-16_W7.62mm_Socket_LongPads")
     )
     (path "/00000000-0000-0000-0000-000060629470/00000000-0000-0000-0000-00006064a2ea"
       (reference "Y1") (unit 1) (value "5MHz") (footprint "Crystal:Crystal_HC49-U_Vertical")
